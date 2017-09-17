@@ -1,0 +1,56 @@
+allprojects {
+    apply plugin: 'java'
+    group 'edu.noia.myoffice'
+    version = '0.0.1'
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+buildscript {
+    ext {
+        springBootVersion = '1.5.6.RELEASE'
+    }
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath 'io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE'
+    }
+}
+
+gradle.taskGraph.whenReady { graph ->
+    def badTasks = ['bootRepackage', 'startScripts', 'distTar', 'distZip']
+    graph.allTasks.findAll {it.name in badTasks}.each { task ->
+        task.enabled = false
+    }
+}
+
+subprojects {
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'maven-publish'
+    sourceCompatibility = 1.8
+    dependencyManagement {
+        imports {
+            mavenBom("org.springframework.boot:spring-boot-dependencies:${springBootVersion}")
+        }
+    }
+    dependencies {
+        compile 'org.projectlombok:lombok:1.16.14'
+        testCompile 'org.mockito:mockito-core:2.8.47'
+        testCompile 'org.springframework.boot:spring-boot-starter-test'
+    }
+    jar {
+        manifest.attributes provider: 'gradle'
+    }
+    publishing {
+        publications {
+            mavenJava(MavenPublication) {
+                from components.java
+            }
+        }
+    }
+}

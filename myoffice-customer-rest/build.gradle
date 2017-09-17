@@ -1,0 +1,11 @@
+dependencies {
+    compile 'edu.noia.myoffice:myoffice-customer-domain:0.0.1'
+    compile 'edu.noia.myoffice:myoffice-common-rest:0.0.1'
+    compile 'org.springframework.boot:spring-boot-starter-hateoas'
+    compile 'org.springframework.boot:spring-boot-starter-web'
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile 'io.springfox:springfox-swagger2:2.6.1'
+    compile 'io.springfox:springfox-swagger-ui:2.6.1'
+    compile 'com.h2database:h2:1.4.196'
+    testCompile 'edu.noia.myoffice:myoffice-common-testing:0.0.1'
+}
