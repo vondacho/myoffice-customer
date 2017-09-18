@@ -1,19 +1,21 @@
 package edu.noia.myoffice.customer.domain.vo;
 
-import edu.noia.myoffice.customer.domain.aggregate.Customer;
-import edu.noia.myoffice.customer.domain.aggregate.Folder;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import javax.validation.constraints.NotNull;
+import java.util.UUID;
+
 @Getter
-@RequiredArgsConstructor(staticName = "of")
+@Setter
+@Builder
+@AllArgsConstructor(staticName = "of")
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class AffiliationVO {
-    @NonNull
-    Folder folder;
-    @NonNull
-    Customer customer;
+    Boolean isPrimaryDebtor;
+    @NotNull
+    UUID customer;
+    @NotNull
+    UUID folder;
 }

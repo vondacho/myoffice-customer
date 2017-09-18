@@ -1,7 +1,9 @@
 package edu.noia.myoffice.customer.domain.aggregate;
 
-import edu.noia.myoffice.customer.domain.entity.Affiliation;
-import edu.noia.myoffice.customer.domain.service.*;
+import edu.noia.myoffice.customer.domain.service.EmailAddressSanitizer;
+import edu.noia.myoffice.customer.domain.service.NameSanitizer;
+import edu.noia.myoffice.customer.domain.service.PhoneNumberGoogleSanitizer;
+import edu.noia.myoffice.customer.domain.service.PhoneNumberSanitizer;
 import edu.noia.myoffice.customer.domain.vo.CustomerVO;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
@@ -9,12 +11,9 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.List;
 import java.util.UUID;
 
-import static java.util.stream.Collectors.toList;
-
-@EqualsAndHashCode(of = "state", doNotUseGetters = true)
+@EqualsAndHashCode(of = {"state"}, doNotUseGetters = true, callSuper = false)
 @RequiredArgsConstructor(staticName = "of")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Customer {
@@ -30,24 +29,12 @@ public class Customer {
         return state.getId();
     }
 
-    public CustomerVO getState() {
-        return state.getData();
+    public CustomerState getState() {
+        return state;
     }
 
-    public Customer setState(CustomerVO data) {
+    public Customer setData(CustomerVO data) {
         state.setData(data);
-        return this;
-    }
-
-    public List<Affiliation> getFolders() {
-        return state.getFolders()
-                .stream()
-                .map(Affiliation::of)
-                .collect(toList());
-    }
-
-    public Customer affiliate(Affiliation affiliation) {
-        state.add(affiliation);
         return this;
     }
 
@@ -62,6 +49,6 @@ public class Customer {
         data.setEmailAddress1(emailAddressSanitizer.sanitize(data.getEmailAddress1()).orElse(null));
         data.setEmailAddress2(emailAddressSanitizer.sanitize(data.getEmailAddress2()).orElse(null));
         data.setEmailAddress3(emailAddressSanitizer.sanitize(data.getEmailAddress3()).orElse(null));
-        return setState(data);
+        return setData(data);
     }
 }

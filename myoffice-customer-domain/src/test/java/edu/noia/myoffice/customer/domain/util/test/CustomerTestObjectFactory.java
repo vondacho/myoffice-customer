@@ -3,15 +3,11 @@ package edu.noia.myoffice.customer.domain.util.test;
 import edu.noia.myoffice.customer.data.adapter.CustomerStateFactoryAdapter;
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
-import edu.noia.myoffice.customer.domain.vo.EmailAddress;
-import edu.noia.myoffice.customer.domain.vo.PhoneNumber;
-import edu.noia.myoffice.customer.domain.vo.Profile;
-import edu.noia.myoffice.customer.domain.vo.Social;
+import edu.noia.myoffice.customer.domain.vo.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class CustomerTestObjectFactory {
@@ -33,23 +29,23 @@ public final class CustomerTestObjectFactory {
     private static final String DEFAULT_NOTES = "He is very dangerous.";
 
     public static Customer createDefaultCustomer() {
-        CustomerState state = new CustomerStateFactoryAdapter().of(
-                DEFAULT_LAST_NAME,
-                DEFAULT_ZIP,
-                DEFAULT_CITY,
-                DEFAULT_COUNTRY);
-        state.setId(UUID.randomUUID());
-        state.setSalutation(DEFAULT_SALUTATION);
-        state.setFirstName(DEFAULT_FIRST_NAME);
-        state.setBirthDate(DEFAULT_BIRTH_DATE);
-        state.setStreet(DEFAULT_STREET);
-        state.setRegion(DEFAULT_REGION);
-        state.setPhoneNumber1(PhoneNumber.of(DEFAULT_PHONE_NUMBER, PhoneNumber.Kind.PRIVATE));
-        state.setEmailAddress1(EmailAddress.of(DEFAULT_EMAIL_ADDRESS, EmailAddress.Kind.PRIVATE));
-        state.setWebsiteUrl(DEFAULT_WEBSITE);
-        state.setSocial(DEFAULT_SOCIAL);
-        state.setProfile(DEFAULT_PROFILE);
-        state.setNotes(DEFAULT_NOTES);
+        CustomerState state = new CustomerStateFactoryAdapter().of(CustomerVO.builder()
+            .lastName(DEFAULT_LAST_NAME)
+            .zip(DEFAULT_ZIP)
+            .city(DEFAULT_CITY)
+            .country(DEFAULT_COUNTRY)
+            .salutation(DEFAULT_SALUTATION)
+            .firstName(DEFAULT_FIRST_NAME)
+            .birthDate(DEFAULT_BIRTH_DATE)
+            .street(DEFAULT_STREET)
+            .region(DEFAULT_REGION)
+            .phoneNumber1(PhoneNumber.of(DEFAULT_PHONE_NUMBER, PhoneNumber.Kind.PRIVATE))
+            .emailAddress1(EmailAddress.of(DEFAULT_EMAIL_ADDRESS, EmailAddress.Kind.PRIVATE))
+            .websiteUrl(DEFAULT_WEBSITE)
+            .social(DEFAULT_SOCIAL)
+            .profile(DEFAULT_PROFILE)
+            .notes(DEFAULT_NOTES).build());
+
         return Customer.of(state);
     }
 

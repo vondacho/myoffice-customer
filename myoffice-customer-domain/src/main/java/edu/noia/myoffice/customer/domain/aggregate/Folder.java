@@ -1,19 +1,15 @@
 package edu.noia.myoffice.customer.domain.aggregate;
 
-import edu.noia.myoffice.customer.domain.entity.Affiliation;
 import edu.noia.myoffice.customer.domain.vo.FolderVO;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
-
-@EqualsAndHashCode(of = "state", doNotUseGetters = true)
+@EqualsAndHashCode(of = {"state"}, doNotUseGetters = true, callSuper = false)
 @RequiredArgsConstructor(staticName = "of")
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Folder {
@@ -25,24 +21,12 @@ public class Folder {
         return state.getId();
     }
 
-    public FolderVO getState() {
-        return state.getData();
+    public FolderState getState() {
+        return state;
     }
 
-    public Folder setState(FolderVO folder) {
+    public Folder setData(FolderVO folder) {
         state.setData(folder);
-        return this;
-    }
-
-    public List<Affiliation> getCustomers() {
-        return state.getCustomers()
-                .stream()
-                .map(Affiliation::of)
-                .collect(toList());
-    }
-
-    public Folder affiliate(Affiliation affiliation) {
-        state.add(affiliation.getState());
         return this;
     }
 }

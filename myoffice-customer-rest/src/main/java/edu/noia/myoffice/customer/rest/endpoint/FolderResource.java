@@ -1,13 +1,13 @@
 package edu.noia.myoffice.customer.rest.endpoint;
 
-import edu.noia.myoffice.common.domain.exception.ResourceNotFoundException;
 import edu.noia.myoffice.common.rest.util.EntityPropertyEditorSupport;
 import edu.noia.myoffice.common.rest.util.IdentifiantPropertyEditorSupport;
-import edu.noia.myoffice.customer.domain.aggregate.Customer;
+import edu.noia.myoffice.customer.domain.aggregate.Affiliation;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
 import edu.noia.myoffice.customer.domain.repository.FolderRepository;
+import edu.noia.myoffice.customer.domain.service.CustomerDataService;
 import edu.noia.myoffice.customer.domain.service.CustomerService;
-import edu.noia.myoffice.customer.domain.vo.Affiliation;
+import edu.noia.myoffice.customer.domain.vo.AffiliationVO;
 import edu.noia.myoffice.customer.domain.vo.CustomerVO;
 import edu.noia.myoffice.customer.domain.vo.FolderVO;
 import lombok.NonNull;
@@ -22,11 +22,10 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import static edu.noia.myoffice.customer.rest.endpoint.FolderResource.FOLDER_ENDPOINT_PATH;
-import static java.util.stream.Collectors.toList;
 import static org.springframework.http.ResponseEntity.ok;
 
 @CrossOrigin
@@ -40,18 +39,18 @@ public class FolderResource {
     @NonNull
     private CustomerService service;
     @NonNull
+    private CustomerDataService dataService;
+    @NonNull
     private FolderRepository repository;
     @NonNull
     private ResourceProcessor<Resource<Folder>> folderProcessor;
-    @NonNull
-    private ResourceProcessor<Resource<Customer>> customerProcessor;
     @NonNull
     private ResourceProcessor<Resource<Affiliation>> affiliationProcessor;
 
     @PostMapping
     public ResponseEntity<Resource<Folder>> create(@RequestBody @Valid FolderVO input) {
         return new ResponseEntity(
-                folderProcessor.process(new Resource<>(service.createFolder(input))),
+                folderProcessor.process(new Resource<>(service.create(input))),
                 HttpStatus.CREATED);
     }
 
@@ -60,28 +59,15 @@ public class FolderResource {
             @PathVariable("id") UUID folderId,
             @RequestBody @Valid FolderVO input) {
 
-        return ok(folderProcessor.process(
-                new Resource<>(
-                        repository.save(
-                                repository.findOne(folderId)
-                                    .map(folder -> folder.assign(input))
-                                        .orElseThrow(() -> new ResourceNotFoundException(
-                                                String.format("No %s identified by %s has been found", Folder.class, folderId)))))));
+        return ok(folderProcessor.process(new Resource<>(service.modify(folderId, input))));
     }
 
     @PostMapping("/{id}/customers")
     public ResponseEntity<Resource<Affiliation>> affiliate(
             @PathVariable("id") UUID folderId,
-            @RequestBody @Valid CustomerVO input) {
-        Resource<Affiliation> affiliation = new Resource<>(service.createInFolder(input, folderId));
+            @RequestBody @Valid AffiliationVO input) {
+        Resource<Affiliation> affiliation = new Resource<>(service.affiliate(input.getCustomer(), folderId));
         return ok(affiliationProcessor.process(affiliation));
-    }
-
-    @PutMapping("/{id}/customers/{customerId}")
-    public ResponseEntity<Resource<Affiliation>> affiliate(
-            @PathVariable("id") UUID folderId,
-            @PathVariable("customerId") UUID customerId) {
-        return ok(affiliationProcessor.process(new Resource<>(service.affiliate(folderId, customerId))));
     }
 
     @GetMapping("/{id}")
@@ -98,18 +84,18 @@ public class FolderResource {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Folder folder) {
+    public ResponseEntity delete(@PathVariable("id") Folder folder) {
         repository.delete(folder.getId());
         return ok().build();
     }
 
     @GetMapping("/{id}/customers")
-    public ResponseEntity<List<Resource<Customer>>> getCustomers(@PathVariable("id") Folder folder) {
-        return ok(folder.getCustomers()
+    public ResponseEntity getCustomers(@PathVariable("id") UUID folder) {
+        return ok(dataService.findAllCustomers(folder)
                 .stream()
-                .map(Resource<Customer>::new)
-                .map(customerProcessor::process)
-                .collect(toList()));
+                .map(pair -> pair.getFirst())
+                .map(Resource<CustomerVO>::new)
+                .collect(Collectors.toList()));
     }
 
     @InitBinder

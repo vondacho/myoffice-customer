@@ -2,7 +2,7 @@ package edu.noia.myoffice.customer.data.jpa;
 
 import edu.noia.myoffice.common.data.jpa.JpaAuditableEntity;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
-import edu.noia.myoffice.customer.domain.entity.AffiliationState;
+import edu.noia.myoffice.customer.domain.aggregate.AffiliationState;
 import edu.noia.myoffice.customer.domain.vo.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -16,6 +16,7 @@ import java.util.*;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode(of = {"id"}, callSuper = false)
 @RequiredArgsConstructor(staticName = "of")
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -98,16 +99,6 @@ public class JpaCustomerState extends JpaAuditableEntity implements CustomerStat
     @Valid
     Profile profile;
     String notes;
-
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, mappedBy = "customer")
-    Set<JpaAffiliationState> folders = new HashSet<>();
-
-    @Override
-    public void add(AffiliationState folder) {
-        JpaAffiliationState affiliation = (JpaAffiliationState) folder;
-        folders.add(affiliation);
-        affiliation.setCustomer(this);
-    }
 
     @Override
     public JpaCustomerState setData(CustomerVO data) {

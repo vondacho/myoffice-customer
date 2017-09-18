@@ -16,13 +16,6 @@ public class FolderLinkProcessor implements ResourceProcessor<Resource<Folder>> 
     @Override
     public Resource<Folder> process(Resource<Folder> folderResource) {
         folderResource.add(linkTo(FolderResource.class).slash(folderResource.getContent().getId()).withSelfRel());
-        folderResource.add(
-                folderResource.getContent()
-                        .getCustomers()
-                        .stream()
-                        .map(Resource::new)
-                        .map(customerResource -> linkTo(CustomerResource.class).slash(customerResource.getContent().getId()).withRel("customer"))
-                        .collect(toList()));
         return folderResource;
     }
 }
