@@ -4,3 +4,4 @@
 .gradle/
 **/build/
 **/node_modules/
+/myoffice-customer-ui/src/main/resources/static/

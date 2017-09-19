@@ -3,8 +3,8 @@ allprojects {
     group 'edu.noia.myoffice'
     version = '0.0.1'
     repositories {
-        mavenLocal()
         mavenCentral()
+        mavenLocal()
         maven {
             url 'https://mymavenrepo.com/repo/je4SwnCKoVMhzmACNxDq/'
         }
@@ -50,6 +50,11 @@ subprojects {
         manifest.attributes provider: 'gradle'
     }
     publishing {
+        repositories {
+            maven {
+                url 'https://mymavenrepo.com/repo/nsgf0NtC53e7keorSltf/'
+            }
+        }
         publications {
             mavenJava(MavenPublication) {
                 from components.java
