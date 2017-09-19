@@ -19,7 +19,7 @@ dependencies {
 }
 
 node {
-    download = false
+    download = true
     nodeModulesDir = file("frontend")
 }
 
