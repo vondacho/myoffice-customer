@@ -5,6 +5,9 @@ allprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+        maven {
+            url 'https://mymavenrepo.com/repo/je4SwnCKoVMhzmACNxDq/'
+        }
     }
 }
 
