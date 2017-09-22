@@ -1,1 +1,1 @@
-web: java -D$JAVA_OPTS -jar myoffice-customer-ui/build/libs/myoffice-customer-ui.jar --server.port=$PORT --spring.profiles.active=inmemory,sampledata
+web: java -D$JAVA_OPTS -jar build/libs/myoffice-customer-ui.jar --server.port=$PORT --spring.profiles.active=inmemory,sampledata
