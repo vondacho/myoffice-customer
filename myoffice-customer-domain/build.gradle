@@ -6,6 +6,8 @@ dependencies {
     compile 'org.hibernate:hibernate-java8:5.2.10.Final'
     compile 'com.googlecode.libphonenumber:libphonenumber:8.7.0'
     testCompile 'com.h2database:h2:1.4.196'
+    runtime 'com.h2database:h2:1.4.196'
+    runtime 'org.postgresql:postgresql:42.1.4.jre7'
 }
 
 bootRepackage {
