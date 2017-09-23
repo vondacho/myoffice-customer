@@ -9,3 +9,7 @@ dependencies {
     compile 'com.h2database:h2:1.4.196'
     testCompile 'edu.noia.myoffice:myoffice-common-testing:0.0.1'
 }
+
+bootRepackage {
+    enabled = false
+}

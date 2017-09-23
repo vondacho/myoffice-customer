@@ -25,7 +25,7 @@ buildscript {
 }
 
 gradle.taskGraph.whenReady { graph ->
-    def badTasks = ['bootRepackage', 'startScripts', 'distTar', 'distZip']
+    def badTasks = ['startScripts', 'distTar', 'distZip']
     graph.allTasks.findAll {it.name in badTasks}.each { task ->
         task.enabled = false
     }
@@ -45,9 +45,6 @@ subprojects {
         compile 'org.projectlombok:lombok:1.16.14'
         testCompile 'org.mockito:mockito-core:2.8.47'
         testCompile 'org.springframework.boot:spring-boot-starter-test'
-    }
-    jar {
-        manifest.attributes provider: 'gradle'
     }
     publishing {
         repositories {

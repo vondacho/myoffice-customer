@@ -36,7 +36,7 @@ task buildClientWatch(type: NpmTask, dependsOn: 'npmInstall') {
     args = ['run','buildWatch']
 }
 
-task buildClient(type:NpmTask, dependsOn:'npmInstall') {
+task buildClient(type: NpmTask, dependsOn: 'npmInstall') {
     group = 'build'
     description = "Compile client side folder for production"
     args = ['run','build']
@@ -46,4 +46,7 @@ bootRun.dependsOn(buildClientDev)
 
 jar.dependsOn(buildClient)
 
+bootRepackage {
+    mainClass = 'edu.noia.myoffice.customer.ui.MyOfficeCustomerUiApplication'
+}
 
