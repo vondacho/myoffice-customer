@@ -59,3 +59,7 @@ subprojects {
         }
     }
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.2' //version required
+}
