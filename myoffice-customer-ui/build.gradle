@@ -27,7 +27,7 @@ node {
 task buildClientDev(type: NpmTask, dependsOn: 'npmInstall') {
     group = 'build'
     description = 'Compile client side folder for development'
-    args = ['run','buildDev']
+    args = ['run','testWithCoverage','buildDev']
 }
 
 task buildClientWatch(type: NpmTask, dependsOn: 'npmInstall') {
