@@ -8,14 +8,15 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Collections;
 
-@Configuration
-public class PageNotFoundBehaviourConfiguration {
+//@Configuration
+public class ClientSidePathLocationStrategySupportConfiguration {
 
   /*
-   * Handle Angular routing correctly
+   * Collaboration behaviour for Angular PathLocationStrategy
+   * https://codecraft.tv/courses/angular/routing/routing-strategies/
    */
   @Bean
-  ErrorViewResolver supportPathBasedLocationStrategyWithoutHashes() {
+  ErrorViewResolver supportPathLocationStrategy() {
     return (request, status, model) -> status == HttpStatus.NOT_FOUND
       ? new ModelAndView("index.html", Collections.emptyMap(), HttpStatus.OK)
       : null;

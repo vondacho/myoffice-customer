@@ -45,8 +45,3 @@ task buildClient(type: NpmTask, dependsOn: 'npmInstall') {
 bootRun.dependsOn(buildClientDev)
 
 jar.dependsOn(buildClient)
-
-bootRepackage {
-    mainClass = 'edu.noia.myoffice.customer.ui.MyOfficeCustomerUiApplication'
-}
-

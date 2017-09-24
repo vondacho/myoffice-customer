@@ -37,7 +37,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping(path = CUSTOMER_ENDPOINT_PATH)
 public class CustomerResource {
 
-    public static final String CUSTOMER_ENDPOINT_PATH = "/customers";
+    public static final String CUSTOMER_ENDPOINT_PATH = "/api/customer/v1/customers";
 
     @NonNull
     private CustomerService service;

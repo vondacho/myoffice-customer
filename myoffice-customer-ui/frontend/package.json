@@ -5,9 +5,9 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "buildDev": "ng build",
-    "buildWatch": "ng build --watch=true",
-    "build": "ng build --prod",
+    "buildDev": "ng build --outputPath=../build/resources/main/static",
+    "buildWatch": "ng build --outputPath=../build/resources/main/static --watch=true",
+    "build": "ng build --outputPath=../build/resources/main/static --prod",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"

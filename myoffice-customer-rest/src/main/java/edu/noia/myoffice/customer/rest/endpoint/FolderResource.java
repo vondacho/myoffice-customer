@@ -34,7 +34,7 @@ import static org.springframework.http.ResponseEntity.ok;
 @RequestMapping(path = FOLDER_ENDPOINT_PATH)
 public class FolderResource {
 
-    public static final String FOLDER_ENDPOINT_PATH = "/folders";
+    public static final String FOLDER_ENDPOINT_PATH = "/api/customer/v1/folders";
 
     @NonNull
     private CustomerService service;
