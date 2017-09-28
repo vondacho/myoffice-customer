@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config local.proxy.config.json",
     "buildDev": "ng test --cc && ng build --outputPath=../build/resources/main/static",
     "buildWatch": "ng build --outputPath=../build/resources/main/static --watch=true",
     "build": "ng build --outputPath=../build/resources/main/static --prod",

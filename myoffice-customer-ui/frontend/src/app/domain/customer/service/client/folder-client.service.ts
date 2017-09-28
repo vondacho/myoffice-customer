@@ -9,6 +9,6 @@ export class FolderClient {
   constructor(private http: HttpClient) { }
 
   findAll(): Observable<Array<Folder>> {
-    return this.http.get('/customer/api/v1/folders');
+    return this.http.get('/api/customer/v1/folders');
   }
 }

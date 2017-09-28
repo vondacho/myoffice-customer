@@ -1,0 +1,10 @@
+<p-dataTable [value]="customers$ | async">
+  <p-column field="state.lastName" header="Nom"></p-column>
+  <p-column field="state.firstName" header="Prénom"></p-column>
+  <p-column field="state.zip" header="Code postal"></p-column>
+  <p-column field="state.city" header="Localité"></p-column>
+</p-dataTable>
+
+<p-paginator [rows]="page.size"
+             [totalRecords]="page.numberOfItems"
+             (onPageChange)="paginate($event)"></p-paginator>
