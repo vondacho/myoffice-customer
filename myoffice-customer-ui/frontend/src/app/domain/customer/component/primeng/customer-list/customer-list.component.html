@@ -1,10 +1,27 @@
-<p-dataTable [value]="customers$ | async">
-  <p-column field="state.lastName" header="Nom"></p-column>
-  <p-column field="state.firstName" header="Prénom"></p-column>
-  <p-column field="state.zip" header="Code postal"></p-column>
-  <p-column field="state.city" header="Localité"></p-column>
-</p-dataTable>
+<div *ngIf="customers$ | async as page; else loading">
 
-<p-paginator [rows]="page.size"
-             [totalRecords]="page.numberOfItems"
-             (onPageChange)="paginate($event)"></p-paginator>
+    <p-growl [value]="msgs"></p-growl>
+
+    <p-dataTable #dt
+                 [value]="page.content"
+                 [sortMode]="multiple"
+                 [(selection)]="selection"
+                 [contextMenu]="cm"
+                 [responsive]="true">
+        <p-column selectionMode="multiple"></p-column>
+        <p-column field="state.lastName" header="Nom" sortable="true" [filter]="true" filterPlaceholder="Search" [editable]="true"></p-column>
+        <p-column field="state.firstName" header="Prénom"></p-column>
+        <p-column field="state.zip" header="Code postal" sortable="true" [filter]="true" filterPlaceholder="Search"></p-column>
+        <p-column field="state.city" header="Localité" [filter]="true" filterPlaceholder="Search"></p-column>
+    </p-dataTable>
+
+    <p-contextMenu #cm [model]="items"></p-contextMenu>
+
+    <p-paginator [rows]="page.size"
+                 [totalRecords]="page.totalElements"
+                 pageLinkSize="5"
+                 (onPageChange)="paginate($event)">
+    </p-paginator>
+
+    <button type="button" pButton icon="fa-file-o" iconPos="left" label="CSV" (click)="dt.exportCSV()"></button>
+</div>

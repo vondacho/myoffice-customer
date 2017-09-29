@@ -1,6 +1,4 @@
 import {NgModule} from '@angular/core';
-import {CalendarModule, DataTableModule} from 'primeng/primeng';
-import {PaginatorModule} from 'primeng/primeng';
 import {CustomerEditComponent} from './customer-edit/customer-edit.component';
 import {FolderEditComponent} from './folder-edit/folder-edit.component';
 import {FolderListComponent} from './folder-list/folder-list.component';
@@ -8,6 +6,7 @@ import {CustomerListComponent} from './customer-list/customer-list.component';
 import {CustomerSearchComponent} from './customer-search/customer-search.component';
 import {FolderSearchComponent} from './folder-search/folder-search.component';
 import {CommonModule} from '@angular/common';
+import {CalendarModule, ContextMenuModule, DataTableModule, GrowlModule, PaginatorModule} from 'primeng/primeng';
 
 @NgModule({
     imports: [
@@ -15,6 +14,8 @@ import {CommonModule} from '@angular/common';
         CalendarModule,
         DataTableModule,
         PaginatorModule,
+        ContextMenuModule,
+        GrowlModule
     ],
     declarations: [
         CustomerEditComponent,
