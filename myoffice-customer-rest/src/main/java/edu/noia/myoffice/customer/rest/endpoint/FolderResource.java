@@ -14,6 +14,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.util.Pair;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
 import org.springframework.http.HttpStatus;
@@ -25,16 +26,13 @@ import javax.validation.Valid;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static edu.noia.myoffice.customer.rest.endpoint.FolderResource.FOLDER_ENDPOINT_PATH;
 import static org.springframework.http.ResponseEntity.ok;
 
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = FOLDER_ENDPOINT_PATH)
+@RequestMapping(path = "/api/customer/v1/folders")
 public class FolderResource {
-
-    public static final String FOLDER_ENDPOINT_PATH = "/api/customer/v1/folders";
 
     @NonNull
     private CustomerService service;
@@ -93,7 +91,7 @@ public class FolderResource {
     public ResponseEntity getCustomers(@PathVariable("id") UUID folder) {
         return ok(dataService.findAllCustomers(folder)
                 .stream()
-                .map(pair -> pair.getFirst())
+                .map(Pair::getFirst)
                 .map(Resource<CustomerVO>::new)
                 .collect(Collectors.toList()));
     }
@@ -107,7 +105,7 @@ public class FolderResource {
                 new EntityPropertyEditorSupport<>(UUID::fromString,
                         repository::findOne,
                         UUID::toString,
-                        (Folder folder) -> folder.getId(),
+                        Folder::getId,
                         Folder.class));
     }
 }

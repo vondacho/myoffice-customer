@@ -21,6 +21,9 @@ public interface CustomerRepository {
     List<Customer> findAll(Specification specification);
 
     @Transactional(readOnly = true)
+    Page<Customer> findAll(Specification specification, Pageable pageable);
+
+    @Transactional(readOnly = true)
     Page<Customer> findAll(Pageable pageable);
 
     @Transactional(readOnly = true)

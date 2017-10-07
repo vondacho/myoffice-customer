@@ -2,7 +2,6 @@ package edu.noia.myoffice.customer.data.jpa;
 
 import edu.noia.myoffice.common.data.jpa.JpaAuditableEntity;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
-import edu.noia.myoffice.customer.domain.aggregate.AffiliationState;
 import edu.noia.myoffice.customer.domain.vo.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -11,7 +10,7 @@ import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.UUID;
 
 @Entity
 @Getter

@@ -2,9 +2,21 @@ import {Component, OnInit} from '@angular/core';
 import {CustomerClient} from '../../../service/client/customer-client.service';
 import {CustomerState} from '../../../model/customer';
 import {Pageable} from '../../../../../core/service/client/pageable';
-import 'rxjs/add/operator/toPromise';
-import {Observable} from 'rxjs/Observable';
-import {MenuItem, Message} from 'primeng/primeng';
+import {FilterMetadata, LazyLoadEvent} from 'primeng/primeng';
+
+interface Page {
+    first: number;
+    size: number;
+    totalElements: number;
+    totalPages: number;
+}
+
+interface Sort {
+    field: string;
+    order: number;
+}
+
+const DEFAULT_PAGE_SIZE = 10;
 
 @Component({
     selector: 'myo-customer-list',
@@ -14,48 +26,47 @@ import {MenuItem, Message} from 'primeng/primeng';
 export class CustomerListComponent implements OnInit {
 
     constructor(private client: CustomerClient) {
-
     }
 
-    customers$: Observable<Pageable<CustomerState>>;
+    elements: CustomerState[];
     selection: CustomerState[];
-    items: MenuItem[];
-    msgs: Message[] = [];
+    page: Page;
 
     ngOnInit() {
-        this.customers$ = this.client.findAll();
-
-        this.items = [
-            {
-                label: 'File',
-                items: [{
-                    label: 'New',
-                    icon: 'fa-plus',
-                    items: [
-                        {label: 'Project'},
-                        {label: 'Other'},
-                    ]
-                },
-                    {label: 'Open'},
-                    {label: 'Quit'}
-                ]
-            },
-            {
-                label: 'Edit',
-                icon: 'fa-edit',
-                items: [
-                    {label: 'Undo', icon: 'fa-mail-forward'},
-                    {label: 'Redo', icon: 'fa-mail-reply'}
-                ]
-            }
-        ];
+        this.initElements();
     }
 
-    paginate(event) {
-        console.log(JSON.stringify(event));
-        // event.first = Index of the first record
-        // event.rows = Number of rows to display in new page
-        // event.page = Index of the new page
-        // event.pageCount = Total number of pages
+    loadLazy(event: LazyLoadEvent) {
+        if (this.page.totalElements === 0) {
+            this.loadCustomers(0, this.page.size);
+        } else {
+            this.loadCustomers(
+                Math.floor(event.first / this.page.size),
+                this.page.size,
+                event.sortField ? `${event.sortField},${event.sortOrder > 0 ? 'asc' : 'desc'}` : event.sortField,
+                event.filters);
+        }
+    }
+
+    private initElements() {
+        this.elements = [];
+        this.selection = [];
+        this.page = {first: 0, size: DEFAULT_PAGE_SIZE, totalElements: 0, totalPages: 0};
+    }
+
+    private loadCustomers(page: number, size: number, sort?: string, filters?: { [s: string]: FilterMetadata; }) {
+        (sort ?
+            this.client.findAll$(page, size, sort, filters) :
+            this.client.findAll$(page, size, null, filters))
+            .subscribe(
+                (p: Pageable<CustomerState>) => {
+                    this.elements = p.content;
+                    this.page.totalElements = p.totalElements;
+                    this.page.totalPages = p.totalPages;
+                },
+                () => {
+                    this.initElements();
+                }
+            );
     }
 }

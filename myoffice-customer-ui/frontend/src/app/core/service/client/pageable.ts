@@ -3,7 +3,7 @@ export interface Pageable<T> {
     totalPages: number;
     totalElements: number;
     size: number;
-    number: number;
+    number: number; // returned page count
     sort: string;
     first: boolean;
 }

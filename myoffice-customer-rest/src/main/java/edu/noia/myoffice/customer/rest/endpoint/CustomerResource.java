@@ -2,12 +2,13 @@ package edu.noia.myoffice.customer.rest.endpoint;
 
 import edu.noia.myoffice.common.rest.util.EntityPropertyEditorSupport;
 import edu.noia.myoffice.common.rest.util.IdentifiantPropertyEditorSupport;
+import edu.noia.myoffice.common.rest.util.SearchCriteria;
+import edu.noia.myoffice.common.rest.util.SpecificationBuilder;
 import edu.noia.myoffice.customer.domain.aggregate.Affiliation;
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.repository.CustomerRepository;
 import edu.noia.myoffice.customer.domain.service.CustomerDataService;
 import edu.noia.myoffice.customer.domain.service.CustomerService;
-import edu.noia.myoffice.customer.domain.vo.AffiliateVO;
 import edu.noia.myoffice.customer.domain.vo.AffiliationVO;
 import edu.noia.myoffice.customer.domain.vo.CustomerVO;
 import edu.noia.myoffice.customer.domain.vo.FolderVO;
@@ -18,26 +19,23 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.util.Pair;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.UUID;
 
-import static edu.noia.myoffice.customer.rest.endpoint.CustomerResource.CUSTOMER_ENDPOINT_PATH;
 import static java.util.stream.Collectors.toList;
+import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.ResponseEntity.ok;
 
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
-@RequestMapping(path = CUSTOMER_ENDPOINT_PATH)
+@RequestMapping(path = "/api/customer/v1/customers")
 public class CustomerResource {
-
-    public static final String CUSTOMER_ENDPOINT_PATH = "/api/customer/v1/customers";
 
     @NonNull
     private CustomerService service;
@@ -52,9 +50,9 @@ public class CustomerResource {
 
     @PostMapping
     public ResponseEntity<Resource<Affiliation>> create(@RequestBody @Valid CustomerVO customer) {
-        return new ResponseEntity(
-                affiliationProcessor.process(new Resource<>(service.create(customer))),
-                HttpStatus.CREATED);
+        return ResponseEntity
+                .status(CREATED)
+                .body(affiliationProcessor.process(new Resource<>(service.create(customer))));
     }
 
     @PutMapping("/{id}")
@@ -80,33 +78,46 @@ public class CustomerResource {
             @PathVariable("id") UUID customer) {
         return ok(dataService.findAllFolders(customer)
                 .stream()
-                .map(pair -> pair.getFirst())
+                .map(Pair::getFirst)
                 .map(Resource<FolderVO>::new)
                 .collect(toList()));
     }
 
     @GetMapping
-    public ResponseEntity<Page<Resource<Customer>>> findAll(Pageable pageable) {
-        return ok(repository
-                .findAll(pageable)
-                .map(Resource<Customer>::new)
-                .map(customerProcessor::process));
+    public ResponseEntity<Page<Resource<Customer>>> findAll(
+            @RequestParam(value = "filter", required = false) String filter,
+            Pageable pageable) {
+
+        if (StringUtils.hasText(filter)) {
+            SpecificationBuilder<Customer> specificationBuilder = new SpecificationBuilder();
+            SearchCriteria.of(filter).forEach(specificationBuilder::with);
+            return ok(repository
+                    .findAll(specificationBuilder.build(), pageable)
+                    .map(Resource<Customer>::new)
+                    .map(customerProcessor::process));
+        }
+        else {
+            return ok(repository
+                    .findAll(pageable)
+                    .map(Resource<Customer>::new)
+                    .map(customerProcessor::process));
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> delete(@PathVariable("id") Customer customer) {
+    public ResponseEntity delete(@PathVariable("id") Customer customer) {
         repository.delete(customer.getId());
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/folderize")
-    public ResponseEntity<?> folderize() {
+    public ResponseEntity folderize() {
         service.folderize();
         return ok().build();
     }
 
     @PostMapping("/sanitize")
-    public ResponseEntity<?> sanitize() {
+    public ResponseEntity sanitize() {
         service.sanitize();
         return ok().build();
     }
@@ -120,7 +131,7 @@ public class CustomerResource {
                 new EntityPropertyEditorSupport<>(UUID::fromString,
                         repository::findOne,
                         UUID::toString,
-                        (Customer customer) -> customer.getId(),
+                        Customer::getId,
                         Customer.class));
     }
 }

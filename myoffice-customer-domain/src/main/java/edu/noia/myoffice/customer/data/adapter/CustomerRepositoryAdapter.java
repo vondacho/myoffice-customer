@@ -44,6 +44,13 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
     }
 
     @Override
+    public Page<Customer> findAll(Specification specification, Pageable pageable) {
+        return repository
+                .findAll(specification, pageable)
+                .map(Customer::of);
+    }
+
+    @Override
     public Page<Customer> findAll(Pageable pageable) {
         return repository
                 .findAll(pageable)
