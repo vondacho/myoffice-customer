@@ -1,9 +1,8 @@
 package edu.noia.myoffice.customer.domain.vo;
 
-import edu.noia.myoffice.customer.domain.validation.ValidationPatterns;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
-import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
@@ -11,18 +10,15 @@ import javax.validation.constraints.Pattern;
 
 import static edu.noia.myoffice.customer.domain.validation.ValidationPatterns.PHONE;
 
-@Embeddable
-@Getter
-@RequiredArgsConstructor(staticName = "of")
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Value(staticConstructor = "of")
+@EqualsAndHashCode(callSuper = false)
 public class PhoneNumber {
 
     @Pattern(regexp = PHONE, message = "'${validatedValue}' does not follow " + PHONE)
-    @NonNull
     @NotNull
     private String number;
+
     @Enumerated(EnumType.STRING)
-    @NonNull
     @NotNull
     private Kind kind;
 

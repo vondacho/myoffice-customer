@@ -1,23 +1,16 @@
 package edu.noia.myoffice.customer.domain.vo;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
-import javax.persistence.Embeddable;
-
-@Embeddable
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Value(staticConstructor = "of")
+@EqualsAndHashCode(callSuper = false)
 public class Social {
 
     private String skypeUrl;
-
     private String facebookUrl;
-
     private String googleplusUrl;
-
     private String linkedinUrl;
-
     private String twitterUrl;
-
     private String instagramUrl;
 }

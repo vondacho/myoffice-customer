@@ -1,14 +1,16 @@
 package edu.noia.myoffice.customer.domain.aggregate;
 
-import edu.noia.myoffice.customer.domain.vo.FolderVO;
+import edu.noia.myoffice.customer.domain.vo.Affiliate;
 
-import java.util.UUID;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 public interface FolderState {
 
-    UUID getId();
-
-    FolderState setData(FolderVO data);
-
-    FolderVO getData();
+    @NotNull
+    String getName();
+    String getNotes();
+    @Valid
+    Set<Affiliate> getAffiliates();
 }

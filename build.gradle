@@ -1,13 +1,12 @@
 allprojects {
     apply plugin: 'java'
     group 'edu.noia.myoffice'
-    version = '0.0.3'
+    version = '0.0.4'
     repositories {
         jcenter()
         mavenLocal()
         maven {
             url myMavenRepoReadUrl
-
             credentials {
                 username myMavenRepoReadUsername
                 password myMavenRepoReadPassword
@@ -19,7 +18,7 @@ allprojects {
 buildscript {
     ext {
         springBootVersion = '1.5.6.RELEASE'
-        myofficeCommonVersion = '0.0.2'
+        myofficeCommonVersion = '0.0.3'
     }
     repositories {
         jcenter()
@@ -56,6 +55,7 @@ subprojects {
     }
     publishing {
         repositories {
+            mavenLocal()
             maven {
                 url myMavenRepoWriteUrl
                 credentials {

@@ -1,17 +1,17 @@
 package edu.noia.myoffice.customer.domain.vo;
 
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.Value;
 
-import javax.persistence.Embeddable;
-
-@Embeddable
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Value(staticConstructor = "of")
+@EqualsAndHashCode(callSuper = false)
 public class Profile {
 
-    private Boolean hasMoved;
-
-    private Boolean isSubcontractor;
-
-    private Boolean sendInvitation;
+    @NonNull
+    Boolean hasMoved;
+    @NonNull
+    Boolean isSubcontractor;
+    @NonNull
+    Boolean sendInvitation;
 }

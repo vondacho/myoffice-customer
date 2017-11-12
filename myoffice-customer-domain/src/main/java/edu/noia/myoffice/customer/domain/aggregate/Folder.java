@@ -1,32 +1,87 @@
 package edu.noia.myoffice.customer.domain.aggregate;
 
-import edu.noia.myoffice.customer.domain.vo.FolderVO;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import edu.noia.myoffice.customer.domain.repository.FolderRepository;
+import edu.noia.myoffice.customer.domain.validation.BeanValidator;
+import edu.noia.myoffice.customer.domain.vo.Affiliate;
+import edu.noia.myoffice.customer.domain.vo.FolderSample;
+import edu.noia.myoffice.customer.domain.vo.MutableFolderSample;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.util.Set;
 import java.util.UUID;
 
-@EqualsAndHashCode(of = {"state"}, doNotUseGetters = true, callSuper = false)
-@RequiredArgsConstructor(staticName = "of")
-@FieldDefaults(level = AccessLevel.PRIVATE)
+import static java.util.Collections.unmodifiableSet;
+
+@EqualsAndHashCode(of = "id", callSuper = false)
+@RequiredArgsConstructor(staticName = "ofValid")
+@FieldDefaults(level = AccessLevel.PACKAGE)
 public class Folder {
 
+    @Getter
+    @NonNull
+    UUID id;
     @NonNull
     FolderState state;
 
-    public UUID getId() {
-        return state.getId();
+    public static Folder of(@NonNull FolderState state) {
+        return of(identify(), state);
+    }
+
+    public static Folder of(@NonNull UUID id, @NonNull FolderState state) {
+        return ofValid(id, validate(state));
+    }
+
+    private static MutableFolderState toMutable(FolderState state) {
+        return state instanceof MutableFolderState ? (MutableFolderState)state : MutableFolderSample.of(state);
+    }
+
+    private static UUID identify() {
+        return UUID.randomUUID();
+    }
+
+    private static <T> T validate(T state) {
+        return BeanValidator.validate(state);
     }
 
     public FolderState getState() {
-        return state;
+        return FolderSample.of(state);
     }
 
-    public Folder setData(FolderVO folder) {
-        state.setData(folder);
+    public Set<Affiliate> getAffiliates() {
+        return unmodifiableSet(state.getAffiliates());
+    }
+
+    public Folder affiliate(UUID customerId) {
+        return affiliate(Affiliate.of(customerId));
+    }
+
+    public Folder affiliate(Affiliate affiliate) {
+        toMutable().add(validate(affiliate));
         return this;
     }
+
+    public Folder unaffiliate(UUID customerId) {
+        toMutable().remove(Affiliate.of(customerId));
+        return this;
+    }
+
+    public Folder modify(FolderState modifier) {
+        toMutable().modify(validate(modifier));
+        return this;
+    }
+
+    public Folder modify(Affiliate modifier) {
+        toMutable().remove(modifier).add(validate(modifier));
+        return this;
+    }
+
+    public Folder save(FolderRepository repository) {
+        return repository.save(getId(), state);
+    }
+
+    private MutableFolderState toMutable() {
+        return (MutableFolderState)(state = toMutable(state));
+    }
+
 }

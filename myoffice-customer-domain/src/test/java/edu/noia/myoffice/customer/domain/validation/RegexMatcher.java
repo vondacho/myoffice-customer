@@ -1,15 +1,14 @@
 package edu.noia.myoffice.customer.domain.validation;
 
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.hamcrest.Description;
 import org.hamcrest.TypeSafeMatcher;
 
+@RequiredArgsConstructor
 public class RegexMatcher extends TypeSafeMatcher<String> {
 
-    private final String regex;
-
-    public RegexMatcher(final String regex) {
-        this.regex = regex;
-    }
+    private final @NonNull String regex;
 
     @Override
     public void describeTo(final Description description) {

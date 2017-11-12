@@ -40,6 +40,7 @@ export class CustomerListComponent implements OnInit {
         if (this.page.totalElements === 0) {
             this.loadCustomers(0, this.page.size);
         } else {
+            this.page.size = event.rows;
             this.loadCustomers(
                 Math.floor(event.first / this.page.size),
                 this.page.size,

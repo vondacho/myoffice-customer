@@ -1,6 +1,7 @@
 package edu.noia.myoffice.customer.domain.repository;
 
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
+import edu.noia.myoffice.customer.domain.aggregate.FolderState;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -29,6 +30,8 @@ public interface FolderRepository {
     }
 
     Folder save(Folder folder);
+
+    Folder save(UUID id, FolderState state);
 
     void delete(UUID id);
 }
