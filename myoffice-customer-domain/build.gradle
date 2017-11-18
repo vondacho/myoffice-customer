@@ -2,8 +2,7 @@ dependencies {
     compile("edu.noia.myoffice:myoffice-common-domain:${myofficeCommonVersion}")
     compile 'javax.validation:validation-api:1.1.0.Final'
     compile 'org.springframework.boot:spring-boot-starter'
-    compile 'com.googlecode.libphonenumber:libphonenumber:8.7.0'
-    testCompile("edu.noia.myoffice:myoffice-customer-data:${version}")
+    compile 'com.googlecode.libphonenumber:libphonenumber:8.8.6'
 }
 
 bootRepackage {

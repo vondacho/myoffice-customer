@@ -2,6 +2,7 @@ package edu.noia.myoffice.customer.domain.util.test;
 
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
+import edu.noia.myoffice.customer.domain.vo.*;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 

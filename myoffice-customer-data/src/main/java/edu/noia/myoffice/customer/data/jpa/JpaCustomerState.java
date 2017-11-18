@@ -18,6 +18,7 @@ import javax.persistence.Entity;
 import java.time.LocalDate;
 import java.util.UUID;
 
+@ToString
 @Entity
 @EqualsAndHashCode(of = "id", callSuper = false)
 @Accessors(chain=true)

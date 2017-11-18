@@ -1,6 +1,7 @@
 dependencies {
     compile("edu.noia.myoffice:myoffice-customer-domain:${version}")
     compile("edu.noia.myoffice:myoffice-customer-data:${version}")
+    compile("edu.noia.myoffice:myoffice-customer-batch:${version}")
     compile("edu.noia.myoffice:myoffice-common-rest:${myofficeCommonVersion}")
     compile 'org.springframework.boot:spring-boot-starter-hateoas'
     compile 'org.springframework.boot:spring-boot-starter-web'

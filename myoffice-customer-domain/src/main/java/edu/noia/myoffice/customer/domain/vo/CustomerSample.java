@@ -6,6 +6,7 @@ import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
+@ToString
 @EqualsAndHashCode(callSuper = false)
 @Getter
 @Builder(builderMethodName = "hiddenBuilder", toBuilder = true)

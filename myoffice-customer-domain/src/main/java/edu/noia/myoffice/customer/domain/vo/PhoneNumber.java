@@ -8,13 +8,13 @@ import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import static edu.noia.myoffice.customer.domain.validation.ValidationPatterns.PHONE;
+import static edu.noia.myoffice.customer.domain.validation.ValidationPatterns.PHONE_INTERNATIONAL;
 
 @Value(staticConstructor = "of")
 @EqualsAndHashCode(callSuper = false)
 public class PhoneNumber {
 
-    @Pattern(regexp = PHONE, message = "'${validatedValue}' does not follow " + PHONE)
+    @Pattern(regexp = PHONE_INTERNATIONAL, message = "'${validatedValue}' does not follow " + PHONE_INTERNATIONAL)
     @NotNull
     private String number;
 

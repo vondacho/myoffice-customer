@@ -8,18 +8,21 @@ import edu.noia.myoffice.customer.domain.vo.FolderSample;
 import edu.noia.myoffice.customer.domain.vo.MutableCustomerSample;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.UUID;
 
+@Slf4j
+@ToString(doNotUseGetters = true)
 @EqualsAndHashCode(of = "id", callSuper = false)
 @RequiredArgsConstructor(staticName = "ofValid")
 @FieldDefaults(level = AccessLevel.PACKAGE)
 public class Customer {
 
-    private static EmailAddressSanitizer emailAddressSanitizer = new EmailAddressSanitizer();
-    private static PhoneNumberSanitizer phoneNumberSanitizer = new PhoneNumberGoogleSanitizer();
-    private static NameSanitizer nameSanitizer = new NameSanitizer();
-    private static IdSanitizer idSanitizer = new IdSanitizer();
+    public static EmailAddressSanitizer emailAddressSanitizer = new EmailAddressSanitizer();
+    public static PhoneNumberSanitizer phoneNumberSanitizer = new PhoneNumberGoogleSanitizer();
+    public static NameSanitizer nameSanitizer = new NameSanitizer();
+    public static IdSanitizer idSanitizer = new IdSanitizer();
 
     @Getter
     @NonNull
@@ -36,7 +39,7 @@ public class Customer {
     }
 
     private static MutableCustomerState toMutable(CustomerState state) {
-        return state instanceof MutableCustomerState ? (MutableCustomerState) state : MutableCustomerSample.of(state);
+        return state instanceof MutableCustomerState ? (MutableCustomerState)state : MutableCustomerSample.of(state);
     }
 
     private static UUID identify() {
@@ -52,7 +55,7 @@ public class Customer {
     }
 
     public Customer modify(CustomerState modifier) {
-        toMutable().modify(validate(modifier));
+        state = toMutable(state).modify(validate(modifier));
         return this;
     }
 
@@ -61,25 +64,22 @@ public class Customer {
     }
 
     public Folder folderize() {
-        return Folder.of(FolderSample.builder(state.getFullname()).build());
+        return Folder.of(FolderSample.builder(state.getFullname()).build()).affiliate(getId());
     }
 
     public Customer sanitize() {
-        id = idSanitizer.sanitize(id);
-        toMutable()
-                .setLastName(nameSanitizer.sanitize(state.getLastName()).orElse(null))
-                .setFirstName(nameSanitizer.sanitize(state.getFirstName()).orElse(null))
-                .setPhoneNumber1(phoneNumberSanitizer.sanitize(state.getPhoneNumber1()).orElse(null))
-                .setPhoneNumber2(phoneNumberSanitizer.sanitize(state.getPhoneNumber2()).orElse(null))
-                .setPhoneNumber3(phoneNumberSanitizer.sanitize(state.getPhoneNumber3()).orElse(null))
-                .setPhoneNumber4(phoneNumberSanitizer.sanitize(state.getPhoneNumber4()).orElse(null))
-                .setEmailAddress1(emailAddressSanitizer.sanitize(state.getEmailAddress1()).orElse(null))
-                .setEmailAddress2(emailAddressSanitizer.sanitize(state.getEmailAddress2()).orElse(null))
-                .setEmailAddress3(emailAddressSanitizer.sanitize(state.getEmailAddress3()).orElse(null));
+        MutableCustomerState ms = toMutable(state);
+        ms
+                .setLastName(nameSanitizer.sanitize(ms.getLastName()).orElse(null))
+                .setFirstName(nameSanitizer.sanitize(ms.getFirstName()).orElse(null))
+                .setPhoneNumber1(phoneNumberSanitizer.sanitize(ms.getPhoneNumber1()).orElse(null))
+                .setPhoneNumber2(phoneNumberSanitizer.sanitize(ms.getPhoneNumber2()).orElse(null))
+                .setPhoneNumber3(phoneNumberSanitizer.sanitize(ms.getPhoneNumber3()).orElse(null))
+                .setPhoneNumber4(phoneNumberSanitizer.sanitize(ms.getPhoneNumber4()).orElse(null))
+                .setEmailAddress1(emailAddressSanitizer.sanitize(ms.getEmailAddress1()).orElse(null))
+                .setEmailAddress2(emailAddressSanitizer.sanitize(ms.getEmailAddress2()).orElse(null))
+                .setEmailAddress3(emailAddressSanitizer.sanitize(ms.getEmailAddress3()).orElse(null));
+        state = ms;
         return this;
-    }
-
-    private MutableCustomerState toMutable() {
-        return (MutableCustomerState) (state = toMutable(state));
     }
 }

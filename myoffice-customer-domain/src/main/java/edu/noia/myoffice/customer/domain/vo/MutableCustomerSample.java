@@ -7,6 +7,7 @@ import lombok.experimental.Accessors;
 
 import java.time.LocalDate;
 
+@ToString
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @Getter

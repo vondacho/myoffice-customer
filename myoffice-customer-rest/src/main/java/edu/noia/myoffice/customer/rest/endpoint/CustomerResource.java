@@ -4,15 +4,17 @@ import edu.noia.myoffice.common.rest.util.EntityPropertyEditorSupport;
 import edu.noia.myoffice.common.rest.util.IdentifiantPropertyEditorSupport;
 import edu.noia.myoffice.common.rest.util.SearchCriteria;
 import edu.noia.myoffice.common.rest.util.SpecificationBuilder;
+import edu.noia.myoffice.customer.batch.job.FolderingJob;
+import edu.noia.myoffice.customer.batch.job.SanityJob;
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
 import edu.noia.myoffice.customer.domain.repository.CustomerRepository;
-import edu.noia.myoffice.customer.domain.service.CustomerSanitizer;
 import edu.noia.myoffice.customer.domain.service.CustomerService;
 import edu.noia.myoffice.customer.domain.vo.Affiliation;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.Resource;
@@ -27,8 +29,11 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
+import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.ResponseEntity.ok;
+import static org.springframework.http.ResponseEntity.status;
 
+@Slf4j
 @CrossOrigin
 @RestController
 @RequiredArgsConstructor
@@ -38,7 +43,9 @@ public class CustomerResource {
     @NonNull
     private CustomerService service;
     @NonNull
-    private CustomerSanitizer sanitizer;
+    private SanityJob sanityJob;
+    @NonNull
+    private FolderingJob folderingJob;
     @NonNull
     private CustomerRepository repository;
     @NonNull
@@ -48,8 +55,8 @@ public class CustomerResource {
 
     @PostMapping
     public ResponseEntity<Resource<Affiliation>> create(@RequestBody CustomerState input) {
-        return ResponseEntity
-                .status(CREATED)
+        return
+                status(CREATED)
                 .body(affiliationProcessor.process(new Resource<>(service.create(input))));
     }
 
@@ -99,14 +106,14 @@ public class CustomerResource {
 
     @PostMapping("/folderize")
     public ResponseEntity folderize() {
-        sanitizer.folderize();
-        return ok().build();
+        folderingJob.execute();
+        return status(NO_CONTENT).build();
     }
 
     @PostMapping("/sanitize")
-    public ResponseEntity sanitize() {
-        sanitizer.sanitize();
-        return ok().build();
+    public ResponseEntity sanitize(Pageable pageable) {
+        sanityJob.execute();
+        return status(NO_CONTENT).build();
     }
 
     @InitBinder

@@ -9,6 +9,7 @@ import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,6 +21,7 @@ import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -32,7 +34,7 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
     public Optional<Customer> findOne(UUID id) {
         return repository
                 .findById(id)
-                .map(state -> Customer.ofValid(state.getId(), state));
+                .map(this::toCustomer);
     }
 
     @Override
@@ -40,7 +42,7 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
         return repository
                 .findAll(specification)
                 .stream()
-                .map(state -> Customer.ofValid(state.getId(), state))
+                .map(this::toCustomer)
                 .collect(toList());
     }
 
@@ -48,14 +50,14 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
     public Page<Customer> findAll(Specification specification, Pageable pageable) {
         return repository
                 .findAll(specification, pageable)
-                .map(state -> Customer.ofValid(state.getId(), state));
+                .map(this::toCustomer);
     }
 
     @Override
     public Page<Customer> findAll(Pageable pageable) {
         return repository
                 .findAll(pageable)
-                .map(state -> Customer.ofValid(state.getId(), state));
+                .map(this::toCustomer);
     }
 
     @Override
@@ -65,14 +67,20 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
 
     @Override
     public Customer save(UUID id, CustomerState state) {
-        return Customer.ofValid(id, repository.save(toJpaEntity(state).setId(id)));
+        JpaCustomerState jpaCustomerState = toJpaEntity(state).setId(id);
+        LOG.debug("jpa:" + jpaCustomerState);
+        return Customer.ofValid(id, repository.save(jpaCustomerState));
     }
 
     @Override
     public void delete(UUID id) {
         repository
                 .findById(id)
-                .ifPresent(customer -> repository.delete(customer));
+                .ifPresent(repository::delete);
+    }
+
+    private Customer toCustomer(JpaCustomerState state) {
+        return Customer.ofValid(state.getId(), state);
     }
 
     private JpaCustomerState toJpaEntity(CustomerState state) {

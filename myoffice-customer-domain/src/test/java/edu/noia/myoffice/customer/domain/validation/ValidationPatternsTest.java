@@ -21,12 +21,17 @@ public class ValidationPatternsTest {
 
     @Test
     public void phoneTest() {
-        assertThat("032 724 52 94", matchesRegex(PHONE));
-        assertThat("xxx", not(matchesRegex(PHONE)));
-        assertThat("032 724 52 94xxx", not(matchesRegex(PHONE)));
         assertThat("032 724 08 05", matchesRegex(PHONE_CH));
+        assertThat("0041 32 841 38 38", matchesRegex(PHONE_CH));
+        assertThat("0041 22 228 55 66", matchesRegex(PHONE_CH));
         assertThat("099 999 99 99", matchesRegex(PHONE_CH));
+        assertThat("0041 02 228 55 66", not(matchesRegex(PHONE_CH)));
+        assertThat("022 28.55.66", not(matchesRegex(PHONE_CH)));
+        assertThat("+41 32 724 52 94", matchesRegex(PHONE_INTERNATIONAL));
+        assertThat("+41022285566", matchesRegex(PHONE_INTERNATIONAL));
         assertThat("+99 99 999 99 99", matchesRegex(PHONE_INTERNATIONAL));
+        assertThat("032 724 52 94xxx", not(matchesRegex(PHONE_INTERNATIONAL)));
+        assertThat("xxx", not(matchesRegex(PHONE_INTERNATIONAL)));
         assertThat("099 999 99 99", not(matchesRegex(PHONE_INTERNATIONAL)));
         assertThat("99 999 99 99", not(matchesRegex(PHONE_INTERNATIONAL)));
         assertThat("099 999 99 9", not(matchesRegex(PHONE_INTERNATIONAL)));

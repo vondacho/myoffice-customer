@@ -18,7 +18,6 @@ public class EmailAddressSanitizer {
     }
 
     public Optional<String> sanitize(String emailAddress) {
-        // Extract an email address
         final Matcher matcher = EMAIL_PATTERN.matcher(emailAddress);
         if (matcher.find()) {
             LOG.debug("{} has been sanitized into {}", emailAddress, matcher.group());

@@ -58,6 +58,11 @@ public class CustomerRepositoryAdapterIT {
                 "lastName", "zip", "city", "country");
     }
 
+    @Test
+    public void readModifySave() {
+        repositoryAdapter.findAll().forEach(customer -> customer.save(repositoryAdapter));
+    }
+
     protected void flushClear() {
         em.flush();
         em.clear();

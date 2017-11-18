@@ -57,31 +57,26 @@ public class Folder {
     }
 
     public Folder affiliate(Affiliate affiliate) {
-        toMutable().add(validate(affiliate));
+        state = toMutable(state).add(validate(affiliate));
         return this;
     }
 
     public Folder unaffiliate(UUID customerId) {
-        toMutable().remove(Affiliate.of(customerId));
+        state = toMutable(state).remove(Affiliate.of(customerId));
         return this;
     }
 
     public Folder modify(FolderState modifier) {
-        toMutable().modify(validate(modifier));
+        state = toMutable(state).modify(validate(modifier));
         return this;
     }
 
     public Folder modify(Affiliate modifier) {
-        toMutable().remove(modifier).add(validate(modifier));
+        state = toMutable(state).remove(modifier).add(validate(modifier));
         return this;
     }
 
     public Folder save(FolderRepository repository) {
         return repository.save(getId(), state);
     }
-
-    private MutableFolderState toMutable() {
-        return (MutableFolderState)(state = toMutable(state));
-    }
-
 }

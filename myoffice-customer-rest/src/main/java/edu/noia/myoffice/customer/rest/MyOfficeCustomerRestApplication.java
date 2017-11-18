@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import edu.noia.myoffice.common.rest.MyOfficeCommonRestApplication;
 import edu.noia.myoffice.common.rest.jackson.AuditableEntityMixin;
+import edu.noia.myoffice.customer.batch.MyOfficeCustomerBatchApplication;
 import edu.noia.myoffice.customer.data.MyOfficeCustomerDataApplication;
 import edu.noia.myoffice.customer.data.jpa.JpaCustomerState;
 import edu.noia.myoffice.customer.data.jpa.JpaFolderState;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Import;
 @Import({
         MyOfficeCustomerDomainApplication.class,
         MyOfficeCustomerDataApplication.class,
+        MyOfficeCustomerBatchApplication.class,
         MyOfficeCommonRestApplication.class
 })
 @SpringBootApplication

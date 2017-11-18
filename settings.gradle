@@ -3,4 +3,5 @@ include 'myoffice-customer-domain'
 include 'myoffice-customer-ui'
 include 'myoffice-customer-rest'
 include 'myoffice-customer-data'
+include 'myoffice-customer-batch'
 
