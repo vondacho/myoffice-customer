@@ -1,0 +1,7 @@
+dependencies {
+    compile("edu.noia.myoffice:myoffice-customer-domain:${version}")
+}
+
+bootRepackage {
+    enabled = false
+}
