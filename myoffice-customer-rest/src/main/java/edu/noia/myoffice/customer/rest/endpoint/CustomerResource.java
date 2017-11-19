@@ -4,14 +4,12 @@ import edu.noia.myoffice.common.rest.util.EntityPropertyEditorSupport;
 import edu.noia.myoffice.common.rest.util.IdentifiantPropertyEditorSupport;
 import edu.noia.myoffice.common.rest.util.SearchCriteria;
 import edu.noia.myoffice.common.rest.util.SpecificationBuilder;
-import edu.noia.myoffice.customer.batch.job.FolderingJob;
-import edu.noia.myoffice.customer.batch.job.SanityJob;
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
-import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
 import edu.noia.myoffice.customer.domain.repository.CustomerRepository;
 import edu.noia.myoffice.customer.domain.service.CustomerService;
 import edu.noia.myoffice.customer.domain.vo.Affiliation;
+import edu.noia.myoffice.customer.domain.vo.MutableCustomerSample;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +27,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.CREATED;
-import static org.springframework.http.HttpStatus.NO_CONTENT;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
 
@@ -43,10 +40,6 @@ public class CustomerResource {
     @NonNull
     private CustomerService service;
     @NonNull
-    private SanityJob sanityJob;
-    @NonNull
-    private FolderingJob folderingJob;
-    @NonNull
     private CustomerRepository repository;
     @NonNull
     private ResourceProcessor<Resource<Customer>> customerProcessor;
@@ -54,7 +47,7 @@ public class CustomerResource {
     private ResourceProcessor<Resource<Affiliation>> affiliationProcessor;
 
     @PostMapping
-    public ResponseEntity<Resource<Affiliation>> create(@RequestBody CustomerState input) {
+    public ResponseEntity<Resource<Affiliation>> create(@RequestBody MutableCustomerSample input) {
         return
                 status(CREATED)
                 .body(affiliationProcessor.process(new Resource<>(service.create(input))));
@@ -63,8 +56,15 @@ public class CustomerResource {
     @PutMapping("/{id}")
     public ResponseEntity<Resource<Customer>> modify(
             @PathVariable("id") UUID customerId,
-            @RequestBody CustomerState input) {
+            @RequestBody MutableCustomerSample input) {
         return ok(customerProcessor.process(new Resource<>(service.modify(customerId, input))));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Resource<Customer>> patch(
+            @PathVariable("id") UUID customerId,
+            @RequestBody MutableCustomerSample input) {
+        return ok(customerProcessor.process(new Resource<>(service.patch(customerId, input))));
     }
 
     @GetMapping("/{id}")
@@ -102,18 +102,6 @@ public class CustomerResource {
     public ResponseEntity delete(@PathVariable("id") Customer customer) {
         repository.delete(customer.getId());
         return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/folderize")
-    public ResponseEntity folderize() {
-        folderingJob.execute();
-        return status(NO_CONTENT).build();
-    }
-
-    @PostMapping("/sanitize")
-    public ResponseEntity sanitize(Pageable pageable) {
-        sanityJob.execute();
-        return status(NO_CONTENT).build();
     }
 
     @InitBinder

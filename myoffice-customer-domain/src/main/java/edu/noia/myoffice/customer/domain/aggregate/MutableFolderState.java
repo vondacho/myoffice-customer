@@ -11,8 +11,12 @@ public interface MutableFolderState extends FolderState {
     MutableFolderState setNotes(String value);
 
     default MutableFolderState modify(FolderState modifier) {
-        return setName(modifier.getName())
-            .setNotes(modifier.getNotes());
+        return setName(modifier.getName()).setNotes(modifier.getNotes());
+    }
+
+    default MutableFolderState patch(FolderState modifier) {
+        return setName(modifier.getName() != null ? modifier.getName() : getName())
+            .setNotes(modifier.getNotes() != null ? modifier.getName() : getNotes());
     }
 
     default MutableFolderState add(Affiliate affiliate) {

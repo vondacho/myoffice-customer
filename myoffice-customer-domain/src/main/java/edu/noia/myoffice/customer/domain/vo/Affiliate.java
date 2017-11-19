@@ -9,7 +9,8 @@ import java.util.UUID;
 @EqualsAndHashCode(of = {"customerId"}, doNotUseGetters = true, callSuper = false)
 @RequiredArgsConstructor(staticName = "of")
 @AllArgsConstructor(staticName = "of")
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PROTECTED)
 public class Affiliate {
 
     @NonNull

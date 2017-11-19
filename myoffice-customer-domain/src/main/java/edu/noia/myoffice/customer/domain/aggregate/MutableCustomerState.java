@@ -52,4 +52,27 @@ public interface MutableCustomerState extends CustomerState {
         .setWebsiteUrl(modifier.getWebsiteUrl())
         .setNotes(modifier.getNotes());
     }
+
+    default MutableCustomerState patch(CustomerState modifier) {
+        return setSalutation(modifier.getSalutation() != null ? modifier.getSalutation() : getSalutation())
+            .setFirstName(modifier.getFirstName() != null ? modifier.getFirstName() : getFirstName())
+            .setLastName(modifier.getLastName() != null ? modifier.getLastName() : getLastName())
+            .setBirthDate(modifier.getBirthDate() != null ? modifier.getBirthDate() : getBirthDate())
+            .setStreetNo(modifier.getStreetNo() != null ? modifier.getStreetNo() : getStreetNo())
+            .setZip(modifier.getZip() != null ? modifier.getZip() : getZip())
+            .setCity(modifier.getCity() != null ? modifier.getCity() : getCity())
+            .setRegion(modifier.getRegion() != null ? modifier.getRegion() : getRegion())
+            .setCountry(modifier.getCountry() != null ? modifier.getCountry() : getCountry())
+            .setEmailAddress1(modifier.getEmailAddress1() != null ? modifier.getEmailAddress1() : getEmailAddress1())
+            .setEmailAddress2(modifier.getEmailAddress2() != null ? modifier.getEmailAddress2() : getEmailAddress2())
+            .setEmailAddress3(modifier.getEmailAddress3() != null ? modifier.getEmailAddress3() : getEmailAddress3())
+            .setPhoneNumber1(modifier.getPhoneNumber1() != null ? modifier.getPhoneNumber1() : getPhoneNumber1())
+            .setPhoneNumber2(modifier.getPhoneNumber2() != null ? modifier.getPhoneNumber2() : getPhoneNumber2())
+            .setPhoneNumber3(modifier.getPhoneNumber3() != null ? modifier.getPhoneNumber3() : getPhoneNumber3())
+            .setPhoneNumber4(modifier.getPhoneNumber4() != null ? modifier.getPhoneNumber4() : getPhoneNumber4())
+            .setProfile(modifier.getProfile() != null ? modifier.getProfile() : getProfile())
+            .setSocial(modifier.getSocial() != null ? modifier.getSocial() : getSocial())
+            .setWebsiteUrl(modifier.getWebsiteUrl() != null ? modifier.getWebsiteUrl() : getWebsiteUrl())
+            .setNotes(modifier.getNotes() != null ? modifier.getNotes() : getNotes());
+    }
 }

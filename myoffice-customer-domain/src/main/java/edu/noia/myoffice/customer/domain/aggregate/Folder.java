@@ -76,6 +76,11 @@ public class Folder {
         return this;
     }
 
+    public Folder patch(FolderState modifier) {
+        state = validate(toMutable(state).patch(modifier));
+        return this;
+    }
+
     public Folder save(FolderRepository repository) {
         return repository.save(getId(), state);
     }

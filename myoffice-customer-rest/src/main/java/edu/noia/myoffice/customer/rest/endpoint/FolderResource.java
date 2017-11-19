@@ -4,12 +4,12 @@ import edu.noia.myoffice.common.rest.util.EntityPropertyEditorSupport;
 import edu.noia.myoffice.common.rest.util.IdentifiantPropertyEditorSupport;
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
-import edu.noia.myoffice.customer.domain.aggregate.FolderState;
 import edu.noia.myoffice.customer.domain.repository.FolderRepository;
 import edu.noia.myoffice.customer.domain.service.CustomerDataService;
 import edu.noia.myoffice.customer.domain.service.CustomerService;
 import edu.noia.myoffice.customer.domain.vo.Affiliate;
 import edu.noia.myoffice.customer.domain.vo.Affiliation;
+import edu.noia.myoffice.customer.domain.vo.MutableFolderSample;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -45,24 +45,39 @@ public class FolderResource {
     private ResourceProcessor<Resource<Affiliation>> affiliationProcessor;
 
     @PostMapping
-    public ResponseEntity<Resource<Folder>> create(@RequestBody FolderState input) {
+    public ResponseEntity<Resource<Folder>> create(@RequestBody MutableFolderSample input) {
         return status(HttpStatus.CREATED)
-                .body(folderProcessor.process(new Resource<>(Folder.of(input))));
+                .body(folderProcessor.process(new Resource<>(Folder.of(input).save(repository))));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Resource<Folder>> modify(
             @PathVariable("id") UUID folderId,
-            @RequestBody FolderState input) {
+            @RequestBody MutableFolderSample input) {
         return ok(folderProcessor.process(new Resource<>(service.modify(folderId, input))));
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<Resource<Folder>> patch(
+            @PathVariable("id") UUID folderId,
+            @RequestBody MutableFolderSample input) {
+        return ok(folderProcessor.process(new Resource<>(service.patch(folderId, input))));
     }
 
     @PutMapping("/{id}/customers")
     public ResponseEntity<Resource<Affiliation>> affiliate(
             @PathVariable("id") UUID folderId,
             @RequestBody Affiliate input) {
-        Resource<Affiliation> affiliation = new Resource<>(service.affiliate(input.getCustomerId(), folderId));
+        Resource<Affiliation> affiliation = new Resource<>(service.affiliate(folderId, input.getCustomerId()));
         return ok(affiliationProcessor.process(affiliation));
+    }
+
+    @DeleteMapping("/{id}/customers/{customerId}")
+    public ResponseEntity<Resource<Affiliation>> unaffiliate(
+            @PathVariable("id") UUID folderId,
+            @PathVariable UUID customerId) {
+        service.unaffiliate(folderId, customerId);
+        return status(HttpStatus.NO_CONTENT).build();
     }
 
     @GetMapping("/{id}")

@@ -75,8 +75,18 @@ public class CustomerService {
     }
 
     @Transactional
+    public Customer patch(UUID customerId, CustomerState modifier) {
+        return findCustomer(customerId).patch(modifier).save(customerRepository);
+    }
+
+    @Transactional
     public Folder modify(UUID folderId, FolderState modifier) {
         return findFolder(folderId).modify(modifier).save(folderRepository);
+    }
+
+    @Transactional
+    public Folder patch(UUID folderId, FolderState modifier) {
+        return findFolder(folderId).patch(modifier).save(folderRepository);
     }
 
     @Transactional

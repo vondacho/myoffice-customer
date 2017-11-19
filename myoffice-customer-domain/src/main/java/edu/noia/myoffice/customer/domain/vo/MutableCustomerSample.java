@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @Accessors(chain = true)
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor
 public class MutableCustomerSample implements MutableCustomerState {
     String salutation;
     String firstName;

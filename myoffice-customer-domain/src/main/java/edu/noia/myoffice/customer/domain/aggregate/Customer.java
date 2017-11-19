@@ -1,7 +1,10 @@
 package edu.noia.myoffice.customer.domain.aggregate;
 
 import edu.noia.myoffice.customer.domain.repository.CustomerRepository;
-import edu.noia.myoffice.customer.domain.service.*;
+import edu.noia.myoffice.customer.domain.service.EmailAddressSanitizer;
+import edu.noia.myoffice.customer.domain.service.NameSanitizer;
+import edu.noia.myoffice.customer.domain.service.PhoneNumberGoogleSanitizer;
+import edu.noia.myoffice.customer.domain.service.PhoneNumberSanitizer;
 import edu.noia.myoffice.customer.domain.validation.BeanValidator;
 import edu.noia.myoffice.customer.domain.vo.CustomerSample;
 import edu.noia.myoffice.customer.domain.vo.FolderSample;
@@ -22,7 +25,6 @@ public class Customer {
     public static EmailAddressSanitizer emailAddressSanitizer = new EmailAddressSanitizer();
     public static PhoneNumberSanitizer phoneNumberSanitizer = new PhoneNumberGoogleSanitizer();
     public static NameSanitizer nameSanitizer = new NameSanitizer();
-    public static IdSanitizer idSanitizer = new IdSanitizer();
 
     @Getter
     @NonNull
@@ -56,6 +58,11 @@ public class Customer {
 
     public Customer modify(CustomerState modifier) {
         state = toMutable(state).modify(validate(modifier));
+        return this;
+    }
+
+    public Customer patch(CustomerState modifier) {
+        state = validate(toMutable(state).patch(modifier));
         return this;
     }
 
