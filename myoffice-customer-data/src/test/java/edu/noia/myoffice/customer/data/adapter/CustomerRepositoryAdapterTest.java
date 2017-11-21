@@ -5,6 +5,7 @@ import edu.noia.myoffice.customer.data.jpa.JpaCustomerStateRepository;
 import edu.noia.myoffice.customer.data.test.util.TestCustomer;
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
+import edu.noia.myoffice.customer.domain.vo.CustomerId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -32,7 +33,7 @@ public class CustomerRepositoryAdapterTest {
     public void save_should_call_jpa_persistence_and_return_the_customer_with_the_expected_state() {
         // Given
         CustomerState anyState = TestCustomer.randomValid();
-        Customer anyCustomer = Customer.of(UUID.randomUUID(), anyState);
+        Customer anyCustomer = Customer.of(CustomerId.of(UUID.randomUUID()), anyState);
         given(jpaRepository.save(any(JpaCustomerState.class)))
                 .willAnswer(invocation -> invocation.getArgument(0));
         // When
@@ -48,7 +49,7 @@ public class CustomerRepositoryAdapterTest {
     public void save_should_call_jpa_persistence_and_return_the_customer_with_the_expected_native_state() {
         // Given
         CustomerState anyState = TestCustomer.randomValid();
-        Customer anyCustomer = Customer.of(UUID.randomUUID(), anyState);
+        Customer anyCustomer = Customer.of(CustomerId.of(UUID.randomUUID()), anyState);
         JpaCustomerState jpaState = JpaCustomerState.of(anyState);
         given(jpaRepository.save(any(JpaCustomerState.class))).willReturn(jpaState);
         // When

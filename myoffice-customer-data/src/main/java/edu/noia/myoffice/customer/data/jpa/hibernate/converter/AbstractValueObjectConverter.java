@@ -1,31 +1,38 @@
-package edu.noia.myoffice.customer.data.jpa.hibernate;
+package edu.noia.myoffice.customer.data.jpa.hibernate.converter;
 
-import edu.noia.myoffice.customer.domain.vo.Affiliate;
+import lombok.AccessLevel;
+import lombok.NonNull;
+import lombok.experimental.FieldDefaults;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
-import org.hibernate.type.BooleanType;
-import org.hibernate.type.StringType;
 import org.hibernate.usertype.UserType;
+import org.springframework.data.util.Pair;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.UUID;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
-public class AffiliateConverter implements UserType {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public abstract class AbstractValueObjectConverter<T> implements UserType {
+
+    @NonNull
+    Class clazz;
+
+    LinkedHashMap<String, Integer> attributes = new LinkedHashMap<>();
 
     @Override
     public int[] sqlTypes() {
-        return new int[] {
-                StringType.INSTANCE.sqlType(),
-                BooleanType.INSTANCE.sqlType(),
-        };
+        return attributes.values().stream().mapToInt(x -> x).toArray();
     }
 
     @Override
     public Class returnedClass() {
-        return Affiliate.class;
+        return clazz.getClass();
     }
 
     @Override
@@ -40,17 +47,35 @@ public class AffiliateConverter implements UserType {
 
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-        final String uuid = rs.getString(names[0]);
-        final Boolean primaryDebtor = rs.getBoolean(names[1]);
-        return uuid != null && primaryDebtor != null ? Affiliate.of(UUID.fromString(uuid), primaryDebtor) : null;
+        return mapGet(Arrays.stream(names)
+            .map(name -> {
+                try {
+                    return Pair.of(name, rs.getObject(name));
+                } finally {
+                    return null;
+                }
+            })
+            .filter(p -> p == null)
+            .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond)));
     }
+
+    public abstract T mapGet(Map<String, Object> values);
 
     @Override
     public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
-        Affiliate affiliate = (Affiliate)value;
-        st.setString(index++, affiliate.getCustomerId().toString());
-        st.setBoolean(index, affiliate.getPrimaryDebtor());
+        if (value != null) {
+            for (Map.Entry<String, Object> e : mapSet((T)value).entrySet()) {
+                st.setObject(index++, e.getValue(), attributes.get(e.getKey()));
+            }
+        }
+        else {
+            for (Map.Entry<String, Integer> e : attributes.entrySet()) {
+                st.setNull(index++, e.getValue());
+            }
+        }
     }
+
+    public abstract Map<String, Object> mapSet(T value);
 
     @Override
     public Object deepCopy(Object value) throws HibernateException {

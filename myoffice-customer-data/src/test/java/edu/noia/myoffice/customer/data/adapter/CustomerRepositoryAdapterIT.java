@@ -52,7 +52,7 @@ public class CustomerRepositoryAdapterIT {
         Customer customer = repositoryAdapter.save(anyCustomer);
         flushClear();
         // Then
-        JpaCustomerState jpaCustomer = jpaRepository.findById(customer.getId()).orElse(null);
+        JpaCustomerState jpaCustomer = jpaRepository.findById(customer.getId().getId()).orElse(null);
         assertThat(jpaCustomer).isNotNull();
         assertThat(jpaCustomer).isEqualToComparingOnlyGivenFields(customer.getState(),
                 "lastName", "zip", "city", "country");

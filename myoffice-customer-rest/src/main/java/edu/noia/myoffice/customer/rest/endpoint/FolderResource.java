@@ -7,9 +7,7 @@ import edu.noia.myoffice.customer.domain.aggregate.Folder;
 import edu.noia.myoffice.customer.domain.repository.FolderRepository;
 import edu.noia.myoffice.customer.domain.service.CustomerDataService;
 import edu.noia.myoffice.customer.domain.service.CustomerService;
-import edu.noia.myoffice.customer.domain.vo.Affiliate;
-import edu.noia.myoffice.customer.domain.vo.Affiliation;
-import edu.noia.myoffice.customer.domain.vo.MutableFolderSample;
+import edu.noia.myoffice.customer.domain.vo.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -52,21 +50,21 @@ public class FolderResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<Resource<Folder>> modify(
-            @PathVariable("id") UUID folderId,
+            @PathVariable("id") FolderId folderId,
             @RequestBody MutableFolderSample input) {
         return ok(folderProcessor.process(new Resource<>(service.modify(folderId, input))));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Resource<Folder>> patch(
-            @PathVariable("id") UUID folderId,
+            @PathVariable("id") FolderId folderId,
             @RequestBody MutableFolderSample input) {
         return ok(folderProcessor.process(new Resource<>(service.patch(folderId, input))));
     }
 
     @PutMapping("/{id}/customers")
     public ResponseEntity<Resource<Affiliation>> affiliate(
-            @PathVariable("id") UUID folderId,
+            @PathVariable("id") FolderId folderId,
             @RequestBody Affiliate input) {
         Resource<Affiliation> affiliation = new Resource<>(service.affiliate(folderId, input.getCustomerId()));
         return ok(affiliationProcessor.process(affiliation));
@@ -74,8 +72,8 @@ public class FolderResource {
 
     @DeleteMapping("/{id}/customers/{customerId}")
     public ResponseEntity<Resource<Affiliation>> unaffiliate(
-            @PathVariable("id") UUID folderId,
-            @PathVariable UUID customerId) {
+            @PathVariable("id") FolderId folderId,
+            @PathVariable CustomerId customerId) {
         service.unaffiliate(folderId, customerId);
         return status(HttpStatus.NO_CONTENT).build();
     }
@@ -94,25 +92,31 @@ public class FolderResource {
     }
 
     @GetMapping("/{id}/customers")
-    public ResponseEntity<List<Customer>> getCustomers(@PathVariable("id") UUID folder) {
+    public ResponseEntity<List<Customer>> getCustomers(@PathVariable("id") FolderId folder) {
         return ok(dataService.findAllCustomers(folder));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity delete(@PathVariable("id") UUID folderId) {
+    public ResponseEntity delete(@PathVariable("id") FolderId folderId) {
         repository.delete(folderId);
         return status(HttpStatus.NO_CONTENT).build();
     }
 
     @InitBinder
     public void dataBinding(WebDataBinder binder) {
-        binder.registerCustomEditor(UUID.class,
-                new IdentifiantPropertyEditorSupport<>(UUID::fromString));
+        binder.registerCustomEditor(FolderId.class,
+                new IdentifiantPropertyEditorSupport<>(
+                        s-> FolderId.of(UUID.fromString(s))));
+
+        binder.registerCustomEditor(CustomerId.class,
+                new IdentifiantPropertyEditorSupport<>(
+                        s-> CustomerId.of(UUID.fromString(s))));
 
         binder.registerCustomEditor(Folder.class,
-                new EntityPropertyEditorSupport<>(UUID::fromString,
+                new EntityPropertyEditorSupport<>(
+                        s-> FolderId.of(UUID.fromString(s)),
                         repository::findOne,
-                        UUID::toString,
+                        id -> id.getId().toString(),
                         Folder::getId,
                         Folder.class));
     }

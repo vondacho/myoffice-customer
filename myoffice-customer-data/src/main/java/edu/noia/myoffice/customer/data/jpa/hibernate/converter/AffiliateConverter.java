@@ -1,8 +1,10 @@
-package edu.noia.myoffice.customer.data.jpa.hibernate;
+package edu.noia.myoffice.customer.data.jpa.hibernate.converter;
 
-import edu.noia.myoffice.customer.domain.vo.PhoneNumber;
+import edu.noia.myoffice.customer.domain.vo.Affiliate;
+import edu.noia.myoffice.customer.domain.vo.CustomerId;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.type.BooleanType;
 import org.hibernate.type.StringType;
 import org.hibernate.usertype.UserType;
 
@@ -10,19 +12,21 @@ import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.UUID;
 
-public class PhoneNumberConverter implements UserType {
+public class AffiliateConverter implements UserType {
+
     @Override
     public int[] sqlTypes() {
         return new int[] {
                 StringType.INSTANCE.sqlType(),
-                StringType.INSTANCE.sqlType()
+                BooleanType.INSTANCE.sqlType(),
         };
     }
 
     @Override
     public Class returnedClass() {
-        return PhoneNumber.class;
+        return Affiliate.class;
     }
 
     @Override
@@ -37,22 +41,16 @@ public class PhoneNumberConverter implements UserType {
 
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-        final String phoneNumber = rs.getString(names[0]);
-        final String kind = rs.getString(names[1]);
-        return phoneNumber != null && kind != null ? PhoneNumber.of(phoneNumber, PhoneNumber.Kind.valueOf(kind)) : null;
+        final String uuid = rs.getString(names[0]);
+        final Boolean primaryDebtor = rs.getBoolean(names[1]);
+        return uuid != null && primaryDebtor != null ? Affiliate.of(CustomerId.of(UUID.fromString(uuid)), primaryDebtor) : null;
     }
 
     @Override
     public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
-        if (value != null) {
-            PhoneNumber ea = (PhoneNumber)value;
-            st.setString(index++, ea.getNumber());
-            st.setString(index, ea.getKind().toString());
-        }
-        else {
-            st.setNull(index++, StringType.INSTANCE.sqlType());
-            st.setNull(index, StringType.INSTANCE.sqlType());
-        }
+        Affiliate affiliate = (Affiliate)value;
+        st.setString(index++, affiliate.getCustomerId().getId().toString());
+        st.setBoolean(index, affiliate.getPrimaryDebtor());
     }
 
     @Override

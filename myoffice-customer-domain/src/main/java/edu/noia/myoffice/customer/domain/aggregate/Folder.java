@@ -2,14 +2,11 @@ package edu.noia.myoffice.customer.domain.aggregate;
 
 import edu.noia.myoffice.customer.domain.repository.FolderRepository;
 import edu.noia.myoffice.customer.domain.validation.BeanValidator;
-import edu.noia.myoffice.customer.domain.vo.Affiliate;
-import edu.noia.myoffice.customer.domain.vo.FolderSample;
-import edu.noia.myoffice.customer.domain.vo.MutableFolderSample;
+import edu.noia.myoffice.customer.domain.vo.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.util.Set;
-import java.util.UUID;
 
 import static java.util.Collections.unmodifiableSet;
 
@@ -20,7 +17,7 @@ public class Folder {
 
     @Getter
     @NonNull
-    UUID id;
+    FolderId id;
     @NonNull
     FolderState state;
 
@@ -28,20 +25,8 @@ public class Folder {
         return of(identify(), state);
     }
 
-    public static Folder of(@NonNull UUID id, @NonNull FolderState state) {
+    public static Folder of(@NonNull FolderId id, @NonNull FolderState state) {
         return ofValid(id, validate(state));
-    }
-
-    private static MutableFolderState toMutable(FolderState state) {
-        return state instanceof MutableFolderState ? (MutableFolderState)state : MutableFolderSample.of(state);
-    }
-
-    private static UUID identify() {
-        return UUID.randomUUID();
-    }
-
-    private static <T> T validate(T state) {
-        return BeanValidator.validate(state);
     }
 
     public FolderState getState() {
@@ -52,8 +37,8 @@ public class Folder {
         return unmodifiableSet(state.getAffiliates());
     }
 
-    public Folder affiliate(UUID customerId) {
-        return affiliate(Affiliate.of(customerId));
+    private static MutableFolderState toMutable(FolderState state) {
+        return state instanceof MutableFolderState ? (MutableFolderState)state : MutableFolderSample.of(state);
     }
 
     public Folder affiliate(Affiliate affiliate) {
@@ -61,9 +46,8 @@ public class Folder {
         return this;
     }
 
-    public Folder unaffiliate(UUID customerId) {
-        state = toMutable(state).remove(Affiliate.of(customerId));
-        return this;
+    private static FolderId identify() {
+        return FolderId.random();
     }
 
     public Folder modify(FolderState modifier) {
@@ -83,5 +67,18 @@ public class Folder {
 
     public Folder save(FolderRepository repository) {
         return repository.save(getId(), state);
+    }
+
+    private static <T> T validate(T state) {
+        return BeanValidator.validate(state);
+    }
+
+    public Folder affiliate(CustomerId customerId) {
+        return affiliate(Affiliate.of(customerId));
+    }
+
+    public Folder unaffiliate(CustomerId customerId) {
+        state = toMutable(state).remove(Affiliate.of(customerId));
+        return this;
     }
 }

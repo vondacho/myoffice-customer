@@ -6,14 +6,13 @@ import edu.noia.myoffice.customer.domain.service.NameSanitizer;
 import edu.noia.myoffice.customer.domain.service.PhoneNumberGoogleSanitizer;
 import edu.noia.myoffice.customer.domain.service.PhoneNumberSanitizer;
 import edu.noia.myoffice.customer.domain.validation.BeanValidator;
+import edu.noia.myoffice.customer.domain.vo.CustomerId;
 import edu.noia.myoffice.customer.domain.vo.CustomerSample;
 import edu.noia.myoffice.customer.domain.vo.FolderSample;
 import edu.noia.myoffice.customer.domain.vo.MutableCustomerSample;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.UUID;
 
 @Slf4j
 @ToString(doNotUseGetters = true)
@@ -28,7 +27,7 @@ public class Customer {
 
     @Getter
     @NonNull
-    UUID id;
+    CustomerId id;
     @NonNull
     CustomerState state;
 
@@ -36,7 +35,7 @@ public class Customer {
         return of(identify(), state);
     }
 
-    public static Customer of(@NonNull UUID id, @NonNull CustomerState state) {
+    public static Customer of(@NonNull CustomerId id, @NonNull CustomerState state) {
         return ofValid(id, validate(state));
     }
 
@@ -44,8 +43,8 @@ public class Customer {
         return state instanceof MutableCustomerState ? (MutableCustomerState)state : MutableCustomerSample.of(state);
     }
 
-    private static UUID identify() {
-        return UUID.randomUUID();
+    private static CustomerId identify() {
+        return CustomerId.random();
     }
 
     private static <T> T validate(T state) {

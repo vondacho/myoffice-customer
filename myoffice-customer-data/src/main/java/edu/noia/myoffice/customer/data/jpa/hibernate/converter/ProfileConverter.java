@@ -1,4 +1,4 @@
-package edu.noia.myoffice.customer.data.jpa.hibernate;
+package edu.noia.myoffice.customer.data.jpa.hibernate.converter;
 
 import edu.noia.myoffice.customer.domain.vo.Profile;
 import org.hibernate.HibernateException;

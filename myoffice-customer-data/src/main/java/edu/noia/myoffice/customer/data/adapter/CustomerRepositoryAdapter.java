@@ -5,6 +5,7 @@ import edu.noia.myoffice.customer.data.jpa.JpaCustomerStateRepository;
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
 import edu.noia.myoffice.customer.domain.repository.CustomerRepository;
+import edu.noia.myoffice.customer.domain.vo.CustomerId;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
@@ -31,9 +31,9 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
     JpaCustomerStateRepository repository;
 
     @Override
-    public Optional<Customer> findOne(UUID id) {
+    public Optional<Customer> findOne(CustomerId id) {
         return repository
-                .findById(id)
+                .findById(id.getId())
                 .map(this::toCustomer);
     }
 
@@ -66,21 +66,19 @@ public class CustomerRepositoryAdapter implements CustomerRepository {
     }
 
     @Override
-    public Customer save(UUID id, CustomerState state) {
-        JpaCustomerState jpaCustomerState = toJpaEntity(state).setId(id);
-        LOG.debug("jpa:" + jpaCustomerState);
-        return Customer.ofValid(id, repository.save(jpaCustomerState));
+    public Customer save(CustomerId id, CustomerState state) {
+        return Customer.ofValid(id, repository.save(toJpaEntity(state).setId(id.getId())));
     }
 
     @Override
-    public void delete(UUID id) {
+    public void delete(CustomerId id) {
         repository
-                .findById(id)
+                .findById(id.getId())
                 .ifPresent(repository::delete);
     }
 
     private Customer toCustomer(JpaCustomerState state) {
-        return Customer.ofValid(state.getId(), state);
+        return Customer.ofValid(CustomerId.of(state.getId()), state);
     }
 
     private JpaCustomerState toJpaEntity(CustomerState state) {

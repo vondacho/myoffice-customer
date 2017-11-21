@@ -1,6 +1,6 @@
-package edu.noia.myoffice.customer.data.jpa.hibernate;
+package edu.noia.myoffice.customer.data.jpa.hibernate.converter;
 
-import edu.noia.myoffice.customer.domain.vo.Social;
+import edu.noia.myoffice.customer.domain.vo.EmailAddress;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.type.StringType;
@@ -11,23 +11,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class SocialConverter implements UserType {
-
+public class EmailAddressConverter implements UserType {
     @Override
     public int[] sqlTypes() {
         return new int[] {
-                StringType.INSTANCE.sqlType(),
-                StringType.INSTANCE.sqlType(),
-                StringType.INSTANCE.sqlType(),
-                StringType.INSTANCE.sqlType(),
-                StringType.INSTANCE.sqlType(),
-                StringType.INSTANCE.sqlType()
+            StringType.INSTANCE.sqlType(),
+            StringType.INSTANCE.sqlType()
         };
     }
 
     @Override
     public Class returnedClass() {
-        return Social.class;
+        return EmailAddress.class;
     }
 
     @Override
@@ -42,32 +37,19 @@ public class SocialConverter implements UserType {
 
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-        return Social.of(
-                rs.getString(names[0]),
-                rs.getString(names[1]),
-                rs.getString(names[2]),
-                rs.getString(names[3]),
-                rs.getString(names[4]),
-                rs.getString(names[5])
-        );
+        final String address = rs.getString(names[0]);
+        final String kind = rs.getString(names[1]);
+        return address != null && kind != null ? EmailAddress.of(address, EmailAddress.Kind.valueOf(kind)) : null;
     }
 
     @Override
     public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
         if (value != null) {
-            Social social = (Social)value;
-            st.setString(index++, social.getFacebookUrl());
-            st.setString(index++, social.getGoogleplusUrl());
-            st.setString(index++, social.getInstagramUrl());
-            st.setString(index++, social.getLinkedinUrl());
-            st.setString(index++, social.getSkypeUrl());
-            st.setString(index, social.getTwitterUrl());
+            EmailAddress ea = (EmailAddress) value;
+            st.setString(index++, ea.getAddress());
+            st.setString(index, ea.getKind().toString());
         }
         else {
-            st.setNull(index++, StringType.INSTANCE.sqlType());
-            st.setNull(index++, StringType.INSTANCE.sqlType());
-            st.setNull(index++, StringType.INSTANCE.sqlType());
-            st.setNull(index++, StringType.INSTANCE.sqlType());
             st.setNull(index++, StringType.INSTANCE.sqlType());
             st.setNull(index, StringType.INSTANCE.sqlType());
         }

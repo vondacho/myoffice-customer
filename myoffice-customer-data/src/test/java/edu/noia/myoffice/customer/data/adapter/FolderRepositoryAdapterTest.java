@@ -7,6 +7,7 @@ import edu.noia.myoffice.customer.data.test.util.TestFolder;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
 import edu.noia.myoffice.customer.domain.aggregate.FolderState;
 import edu.noia.myoffice.customer.domain.vo.Affiliate;
+import edu.noia.myoffice.customer.domain.vo.FolderId;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -34,7 +35,7 @@ public class FolderRepositoryAdapterTest {
     public void save_should_call_jpa_persistence_and_return_the_folder_with_the_expected_state() {
         // Given
         FolderState anyState = TestFolder.randomValid();
-        Folder anyFolder = Folder.of(UUID.randomUUID(), anyState);
+        Folder anyFolder = Folder.of(FolderId.of(UUID.randomUUID()), anyState);
         given(jpaRepository.save(any(JpaFolderState.class)))
                 .willAnswer(invocation -> invocation.getArgument(0));
         // When
@@ -50,7 +51,7 @@ public class FolderRepositoryAdapterTest {
     public void save_should_call_jpa_persistence_and_return_the_folder_with_the_expected_native_state() {
         // Given
         FolderState anyState = TestFolder.randomValid();
-        Folder anyFolder = Folder.of(UUID.randomUUID(), anyState);
+        Folder anyFolder = Folder.of(FolderId.of(UUID.randomUUID()), anyState);
         JpaFolderState jpaState = JpaFolderState.of(anyState);
         given(jpaRepository.save(any(JpaFolderState.class))).willReturn(jpaState);
         // When

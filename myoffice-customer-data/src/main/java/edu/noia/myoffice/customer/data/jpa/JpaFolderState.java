@@ -28,7 +28,7 @@ public class JpaFolderState extends JpaAuditableEntity implements MutableFolderS
     String name;
     String notes;
 
-    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.AffiliateConverter")
+    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.converter.AffiliateConverter")
     @Columns(columns = {
             @Column(name="customerId"),
             @Column(name="primaryDebtor")

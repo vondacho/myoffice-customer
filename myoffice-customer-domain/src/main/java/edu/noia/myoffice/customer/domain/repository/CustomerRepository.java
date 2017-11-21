@@ -2,6 +2,7 @@ package edu.noia.myoffice.customer.domain.repository;
 
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
+import edu.noia.myoffice.customer.domain.vo.CustomerId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,13 +11,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Transactional
 public interface CustomerRepository {
 
     @Transactional(readOnly = true)
-    Optional<Customer> findOne(UUID id);
+    Optional<Customer> findOne(CustomerId id);
 
     @Transactional(readOnly = true)
     List<Customer> findAll(Specification specification);
@@ -34,8 +34,8 @@ public interface CustomerRepository {
 
     Customer save(Customer customer);
 
-    Customer save(UUID id, CustomerState state);
+    Customer save(CustomerId id, CustomerState state);
 
-    void delete(UUID id);
+    void delete(CustomerId id);
 }
 

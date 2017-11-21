@@ -7,7 +7,6 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -42,7 +41,7 @@ public class TestCustomer {
     }
 
     public static Customer random() {
-        return Customer.ofValid(UUID.randomUUID(), randomValid());
+        return Customer.ofValid(CustomerId.random(), randomValid());
     }
 
     static String randomSwissPhoneNumber() {

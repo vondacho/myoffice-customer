@@ -9,6 +9,7 @@ import edu.noia.myoffice.customer.domain.aggregate.Folder;
 import edu.noia.myoffice.customer.domain.repository.CustomerRepository;
 import edu.noia.myoffice.customer.domain.service.CustomerService;
 import edu.noia.myoffice.customer.domain.vo.Affiliation;
+import edu.noia.myoffice.customer.domain.vo.CustomerId;
 import edu.noia.myoffice.customer.domain.vo.MutableCustomerSample;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -55,14 +56,14 @@ public class CustomerResource {
 
     @PutMapping("/{id}")
     public ResponseEntity<Resource<Customer>> modify(
-            @PathVariable("id") UUID customerId,
+            @PathVariable("id") CustomerId customerId,
             @RequestBody MutableCustomerSample input) {
         return ok(customerProcessor.process(new Resource<>(service.modify(customerId, input))));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Resource<Customer>> patch(
-            @PathVariable("id") UUID customerId,
+            @PathVariable("id") CustomerId customerId,
             @RequestBody MutableCustomerSample input) {
         return ok(customerProcessor.process(new Resource<>(service.patch(customerId, input))));
     }
@@ -106,13 +107,15 @@ public class CustomerResource {
 
     @InitBinder
     public void dataBinding(WebDataBinder binder) {
-        binder.registerCustomEditor(UUID.class,
-                new IdentifiantPropertyEditorSupport<>(UUID::fromString));
+        binder.registerCustomEditor(CustomerId.class,
+                new IdentifiantPropertyEditorSupport<>(
+                        s-> CustomerId.of(UUID.fromString(s))));
 
         binder.registerCustomEditor(Customer.class,
-                new EntityPropertyEditorSupport<>(UUID::fromString,
+                new EntityPropertyEditorSupport<>(
+                        s-> CustomerId.of(UUID.fromString(s)),
                         repository::findOne,
-                        UUID::toString,
+                        id -> id.getId().toString(),
                         Customer::getId,
                         Customer.class));
     }

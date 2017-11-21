@@ -5,6 +5,7 @@ import edu.noia.myoffice.customer.data.jpa.JpaFolderStateRepository;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
 import edu.noia.myoffice.customer.domain.aggregate.FolderState;
 import edu.noia.myoffice.customer.domain.repository.FolderRepository;
+import edu.noia.myoffice.customer.domain.vo.FolderId;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static java.util.stream.Collectors.toList;
 
@@ -33,10 +33,10 @@ public class FolderRepositoryAdapter implements FolderRepository {
     }
 
     @Override
-    public Optional<Folder> findOne(UUID id) {
+    public Optional<Folder> findOne(FolderId id) {
         return repository
-                .findById(id)
-                .map(state -> Folder.ofValid(state.getId(), state));
+                .findById(id.getId())
+                .map(state -> Folder.ofValid(FolderId.of(state.getId()), state));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class FolderRepositoryAdapter implements FolderRepository {
         return repository
                 .findAll(specification)
                 .stream()
-                .map(state -> Folder.ofValid(state.getId(), state))
+                .map(state -> Folder.ofValid(FolderId.of(state.getId()), state))
                 .collect(toList());
     }
 
@@ -52,7 +52,7 @@ public class FolderRepositoryAdapter implements FolderRepository {
     public Page<Folder> findAll(Pageable pageable) {
         return repository
                 .findAll(pageable)
-                .map(state -> Folder.ofValid(state.getId(), state));
+                .map(state -> Folder.ofValid(FolderId.of(state.getId()), state));
     }
 
     @Override
@@ -61,14 +61,14 @@ public class FolderRepositoryAdapter implements FolderRepository {
     }
 
     @Override
-    public void delete(UUID id) {
-        repository
-                .findById(id)
-                .ifPresent(folder -> repository.delete(folder));
+    public Folder save(FolderId id, FolderState state) {
+        return Folder.ofValid(id, repository.save(toJpaEntity(state).setId(id.getId())));
     }
 
     @Override
-    public Folder save(UUID id, FolderState state) {
-        return Folder.ofValid(id, repository.save(toJpaEntity(state).setId(id)));
+    public void delete(FolderId id) {
+        repository
+                .findById(id.getId())
+                .ifPresent(folder -> repository.delete(folder));
     }
 }

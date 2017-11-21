@@ -39,7 +39,7 @@ public class FolderRepositoryAdapterIT {
         Folder folder = repositoryAdapter.save(anyFolder);
         flushClear();
         // Then
-        JpaFolderState jpaFolder = jpaRepository.findById(folder.getId()).orElse(null);
+        JpaFolderState jpaFolder = jpaRepository.findById(folder.getId().getId()).orElse(null);
         assertThat(jpaFolder).isNotNull();
         assertThat(jpaFolder).isEqualToComparingOnlyGivenFields(folder.getState(),"name", "notes");
     }
@@ -54,7 +54,7 @@ public class FolderRepositoryAdapterIT {
         Folder folder = repositoryAdapter.save(anyFolder);
         flushClear();
         // Then
-        JpaFolderState jpaFolder = jpaRepository.findById(folder.getId()).orElse(null);
+        JpaFolderState jpaFolder = jpaRepository.findById(folder.getId().getId()).orElse(null);
         assertThat(jpaFolder).isNotNull();
         assertThat(jpaFolder).isEqualToComparingOnlyGivenFields(folder.getState(),"name", "notes");
         assertThat(jpaFolder.getAffiliates()).containsExactlyInAnyOrder(affiliate1, affiliate2);

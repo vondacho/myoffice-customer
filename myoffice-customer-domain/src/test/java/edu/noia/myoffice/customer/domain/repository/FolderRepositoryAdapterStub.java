@@ -2,6 +2,7 @@ package edu.noia.myoffice.customer.domain.repository;
 
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
 import edu.noia.myoffice.customer.domain.aggregate.FolderState;
+import edu.noia.myoffice.customer.domain.vo.FolderId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -9,12 +10,11 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Component
 public class FolderRepositoryAdapterStub implements FolderRepository {
     @Override
-    public Optional<Folder> findOne(UUID id) {
+    public Optional<Folder> findOne(FolderId id) {
         return null;
     }
 
@@ -34,12 +34,12 @@ public class FolderRepositoryAdapterStub implements FolderRepository {
     }
 
     @Override
-    public Folder save(UUID id, FolderState state) {
+    public Folder save(FolderId id, FolderState state) {
         return null;
     }
 
     @Override
-    public void delete(UUID id) {
+    public void delete(FolderId id) {
 
     }
 }

@@ -1,38 +1,28 @@
-package edu.noia.myoffice.customer.data.jpa.hibernate;
+package edu.noia.myoffice.customer.data.jpa.hibernate.converter;
 
-import lombok.AccessLevel;
-import lombok.NonNull;
-import lombok.experimental.FieldDefaults;
+import edu.noia.myoffice.customer.domain.vo.PhoneNumber;
 import org.hibernate.HibernateException;
 import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.type.StringType;
 import org.hibernate.usertype.UserType;
-import org.springframework.data.util.Pair;
 
 import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
 
-@FieldDefaults(level = AccessLevel.PRIVATE)
-public abstract class AbstractValueObjectConverter<T> implements UserType {
-
-    @NonNull
-    Class clazz;
-
-    LinkedHashMap<String, Integer> attributes = new LinkedHashMap<>();
-
+public class PhoneNumberConverter implements UserType {
     @Override
     public int[] sqlTypes() {
-        return attributes.values().stream().mapToInt(x -> x).toArray();
+        return new int[] {
+                StringType.INSTANCE.sqlType(),
+                StringType.INSTANCE.sqlType()
+        };
     }
 
     @Override
     public Class returnedClass() {
-        return clazz.getClass();
+        return PhoneNumber.class;
     }
 
     @Override
@@ -47,35 +37,23 @@ public abstract class AbstractValueObjectConverter<T> implements UserType {
 
     @Override
     public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
-        return mapGet(Arrays.stream(names)
-            .map(name -> {
-                try {
-                    return Pair.of(name, rs.getObject(name));
-                } finally {
-                    return null;
-                }
-            })
-            .filter(p -> p == null)
-            .collect(Collectors.toMap(Pair::getFirst, Pair::getSecond)));
+        final String phoneNumber = rs.getString(names[0]);
+        final String kind = rs.getString(names[1]);
+        return phoneNumber != null && kind != null ? PhoneNumber.of(phoneNumber, PhoneNumber.Kind.valueOf(kind)) : null;
     }
-
-    public abstract T mapGet(Map<String, Object> values);
 
     @Override
     public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
         if (value != null) {
-            for (Map.Entry<String, Object> e : mapSet((T)value).entrySet()) {
-                st.setObject(index++, e.getValue(), attributes.get(e.getKey()));
-            }
+            PhoneNumber ea = (PhoneNumber)value;
+            st.setString(index++, ea.getNumber());
+            st.setString(index, ea.getKind().toString());
         }
         else {
-            for (Map.Entry<String, Integer> e : attributes.entrySet()) {
-                st.setNull(index++, e.getValue());
-            }
+            st.setNull(index++, StringType.INSTANCE.sqlType());
+            st.setNull(index, StringType.INSTANCE.sqlType());
         }
     }
-
-    public abstract Map<String, Object> mapSet(T value);
 
     @Override
     public Object deepCopy(Object value) throws HibernateException {

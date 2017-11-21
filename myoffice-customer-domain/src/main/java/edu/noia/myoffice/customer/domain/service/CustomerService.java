@@ -9,12 +9,12 @@ import edu.noia.myoffice.customer.domain.repository.FolderRepository;
 import edu.noia.myoffice.customer.domain.util.EntityFinder;
 import edu.noia.myoffice.customer.domain.vo.Affiliate;
 import edu.noia.myoffice.customer.domain.vo.Affiliation;
+import edu.noia.myoffice.customer.domain.vo.CustomerId;
+import edu.noia.myoffice.customer.domain.vo.FolderId;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -31,22 +31,22 @@ public class CustomerService {
     }
 
     @Transactional
-    public Affiliation create(CustomerState data, UUID folderId) {
+    public Affiliation create(CustomerState data, FolderId folderId) {
         return affiliate(findFolder(folderId), Customer.of(data).save(customerRepository));
     }
 
     @Transactional
-    public Affiliation affiliate(UUID customerId) {
+    public Affiliation affiliate(CustomerId customerId) {
         return affiliate(findCustomer(customerId));
     }
 
     @Transactional
-    public Affiliation affiliate(UUID folderId, UUID customerId) {
+    public Affiliation affiliate(FolderId folderId, CustomerId customerId) {
         return affiliate(findFolder(folderId), findCustomer(customerId));
     }
 
     @Transactional
-    public Affiliation affiliate(UUID folderId, Affiliate affiliate) {
+    public Affiliation affiliate(FolderId folderId, Affiliate affiliate) {
         return affiliate(findFolder(folderId), affiliate);
     }
 
@@ -65,40 +65,40 @@ public class CustomerService {
     }
 
     @Transactional
-    public Folder unaffiliate(UUID folderId, UUID customerId) {
+    public Folder unaffiliate(FolderId folderId, CustomerId customerId) {
         return findFolder(folderId).unaffiliate(customerId).save(folderRepository);
     }
 
     @Transactional
-    public Customer modify(UUID customerId, CustomerState modifier) {
+    public Customer modify(CustomerId customerId, CustomerState modifier) {
         return findCustomer(customerId).modify(modifier).save(customerRepository);
     }
 
     @Transactional
-    public Customer patch(UUID customerId, CustomerState modifier) {
+    public Customer patch(CustomerId customerId, CustomerState modifier) {
         return findCustomer(customerId).patch(modifier).save(customerRepository);
     }
 
     @Transactional
-    public Folder modify(UUID folderId, FolderState modifier) {
+    public Folder modify(FolderId folderId, FolderState modifier) {
         return findFolder(folderId).modify(modifier).save(folderRepository);
     }
 
     @Transactional
-    public Folder patch(UUID folderId, FolderState modifier) {
+    public Folder patch(FolderId folderId, FolderState modifier) {
         return findFolder(folderId).patch(modifier).save(folderRepository);
     }
 
     @Transactional
-    public Folder modify(UUID folderId, Affiliate modifier) {
+    public Folder modify(FolderId folderId, Affiliate modifier) {
         return findFolder(folderId).modify(modifier).save(folderRepository);
     }
 
-    Folder findFolder(UUID id) {
+    Folder findFolder(FolderId id) {
         return EntityFinder.find(Folder.class, id, folderRepository::findOne);
     }
 
-    Customer findCustomer(UUID id) {
+    Customer findCustomer(CustomerId id) {
         return EntityFinder.find(Customer.class, id, customerRepository::findOne);
     }
 }
