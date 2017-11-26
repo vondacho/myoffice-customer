@@ -1,5 +1,6 @@
 package edu.noia.myoffice.customer.domain.aggregate;
 
+import edu.noia.myoffice.common.domain.entity.EntityState;
 import edu.noia.myoffice.customer.domain.vo.EmailAddress;
 import edu.noia.myoffice.customer.domain.vo.PhoneNumber;
 import edu.noia.myoffice.customer.domain.vo.Profile;
@@ -10,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.Optional;
 
-public interface CustomerState {
+public interface CustomerState extends EntityState {
 
     String getSalutation();
     @NotNull

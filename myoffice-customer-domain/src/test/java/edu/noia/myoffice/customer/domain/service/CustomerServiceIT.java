@@ -1,29 +1,27 @@
 package edu.noia.myoffice.customer.domain.service;
 
-import edu.noia.myoffice.customer.domain.MyOfficeCustomerDomainApplication;
+import edu.noia.myoffice.customer.domain.MyOfficeCustomerDomainConfiguration;
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
 import edu.noia.myoffice.customer.domain.repository.CustomerRepository;
 import edu.noia.myoffice.customer.domain.repository.FolderRepository;
-import edu.noia.myoffice.customer.domain.util.test.TestCustomer;
-import edu.noia.myoffice.customer.domain.util.test.TestFolder;
+import edu.noia.myoffice.customer.domain.test.config.ITConfiguration;
+import edu.noia.myoffice.customer.domain.test.util.TestCustomer;
+import edu.noia.myoffice.customer.domain.test.util.TestFolder;
 import edu.noia.myoffice.customer.domain.vo.Affiliate;
 import edu.noia.myoffice.customer.domain.vo.Affiliation;
-import org.junit.Ignore;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@Ignore
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {MyOfficeCustomerDomainApplication.class})
-@Transactional
+@SpringBootTest(classes = {ITConfiguration.class, MyOfficeCustomerDomainConfiguration.class})
 public class CustomerServiceIT {
 
     @Autowired
@@ -32,6 +30,12 @@ public class CustomerServiceIT {
     private CustomerRepository customerRepository;
     @Autowired
     private FolderRepository folderRepository;
+
+    @After
+    public void rollback() {
+        customerRepository.findAll().forEach(customer -> customerRepository.delete(customer.getId()));
+        folderRepository.findAll().forEach(folder -> folderRepository.delete(folder.getId()));
+    }
 
     @Test
     public void create_should_return_an_affiliation_of_the_customer_and_a_new_folder() {

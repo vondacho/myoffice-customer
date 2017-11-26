@@ -1,4 +1,4 @@
-package edu.noia.myoffice.customer.domain.util.test;
+package edu.noia.myoffice.customer.domain.test.util;
 
 import edu.noia.myoffice.customer.domain.vo.Affiliate;
 import edu.noia.myoffice.customer.domain.vo.CustomerId;

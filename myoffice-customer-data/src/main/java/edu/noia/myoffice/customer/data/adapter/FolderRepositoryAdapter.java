@@ -36,7 +36,7 @@ public class FolderRepositoryAdapter implements FolderRepository {
     public Optional<Folder> findOne(FolderId id) {
         return repository
                 .findById(id.getId())
-                .map(state -> Folder.ofValid(FolderId.of(state.getId()), state));
+                .map(this::toFolder);
     }
 
     @Override
@@ -44,15 +44,15 @@ public class FolderRepositoryAdapter implements FolderRepository {
         return repository
                 .findAll(specification)
                 .stream()
-                .map(state -> Folder.ofValid(FolderId.of(state.getId()), state))
+                .map(this::toFolder)
                 .collect(toList());
     }
 
     @Override
-    public Page<Folder> findAll(Pageable pageable) {
+    public Page<Folder> findAll(Specification specification, Pageable pageable) {
         return repository
-                .findAll(pageable)
-                .map(state -> Folder.ofValid(FolderId.of(state.getId()), state));
+                .findAll(specification, pageable)
+                .map(this::toFolder);
     }
 
     @Override
@@ -71,4 +71,16 @@ public class FolderRepositoryAdapter implements FolderRepository {
                 .findById(id.getId())
                 .ifPresent(folder -> repository.delete(folder));
     }
+
+    @Override
+    public Page<Folder> findAll(Pageable pageable) {
+        return repository
+                .findAll(pageable)
+                .map(this::toFolder);
+    }
+
+    private Folder toFolder(JpaFolderState state) {
+        return Folder.ofValid(FolderId.of(state.getId()), state);
+    }
+
 }

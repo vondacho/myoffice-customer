@@ -1,80 +1,57 @@
 package edu.noia.myoffice.customer.domain.aggregate;
 
+import edu.noia.myoffice.common.domain.entity.BaseEntity;
+import edu.noia.myoffice.common.util.BeanValidator;
 import edu.noia.myoffice.customer.domain.repository.CustomerRepository;
 import edu.noia.myoffice.customer.domain.service.EmailAddressSanitizer;
 import edu.noia.myoffice.customer.domain.service.NameSanitizer;
 import edu.noia.myoffice.customer.domain.service.PhoneNumberGoogleSanitizer;
 import edu.noia.myoffice.customer.domain.service.PhoneNumberSanitizer;
-import edu.noia.myoffice.customer.domain.validation.BeanValidator;
 import edu.noia.myoffice.customer.domain.vo.CustomerId;
+import edu.noia.myoffice.customer.domain.vo.CustomerMutableSample;
 import edu.noia.myoffice.customer.domain.vo.CustomerSample;
 import edu.noia.myoffice.customer.domain.vo.FolderSample;
-import edu.noia.myoffice.customer.domain.vo.MutableCustomerSample;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @ToString(doNotUseGetters = true)
-@EqualsAndHashCode(of = "id", callSuper = false)
-@RequiredArgsConstructor(staticName = "ofValid")
-@FieldDefaults(level = AccessLevel.PACKAGE)
-public class Customer {
+@EqualsAndHashCode(callSuper = true)
+public class Customer extends BaseEntity<
+        Customer,
+        CustomerId,
+        CustomerState,
+        CustomerMutableState,
+        CustomerRepository> {
 
     public static EmailAddressSanitizer emailAddressSanitizer = new EmailAddressSanitizer();
     public static PhoneNumberSanitizer phoneNumberSanitizer = new PhoneNumberGoogleSanitizer();
     public static NameSanitizer nameSanitizer = new NameSanitizer();
 
-    @Getter
-    @NonNull
-    CustomerId id;
-    @NonNull
-    CustomerState state;
-
     public static Customer of(@NonNull CustomerState state) {
-        return of(identify(), state);
+        return of(CustomerId.random(), state);
     }
 
     public static Customer of(@NonNull CustomerId id, @NonNull CustomerState state) {
-        return ofValid(id, validate(state));
+        return ofValid(id, validateState(state));
     }
 
-    private static MutableCustomerState toMutable(CustomerState state) {
-        return state instanceof MutableCustomerState ? (MutableCustomerState)state : MutableCustomerSample.of(state);
-    }
-
-    private static CustomerId identify() {
-        return CustomerId.random();
-    }
-
-    private static <T> T validate(T state) {
-        return BeanValidator.validate(state);
-    }
-
-    public CustomerState getState() {
-        return CustomerSample.of(state);
-    }
-
-    public Customer modify(CustomerState modifier) {
-        state = toMutable(state).modify(validate(modifier));
-        return this;
-    }
-
-    public Customer patch(CustomerState modifier) {
-        state = validate(toMutable(state).patch(modifier));
-        return this;
-    }
-
-    public Customer save(CustomerRepository repository) {
-        return repository.save(getId(), state);
+    public static Customer ofValid(@NonNull CustomerId id, @NonNull CustomerState state) {
+        return new Customer().setState(state).setId(id);
     }
 
     public Folder folderize() {
         return Folder.of(FolderSample.builder(state.getFullname()).build()).affiliate(getId());
     }
 
+    private static <T> T validateState(T state) {
+        return BeanValidator.validate(state);
+    }
+
     public Customer sanitize() {
-        MutableCustomerState ms = toMutable(state);
+        CustomerMutableState ms = toMutable(state);
         ms
                 .setLastName(nameSanitizer.sanitize(ms.getLastName()).orElse(null))
                 .setFirstName(nameSanitizer.sanitize(ms.getFirstName()).orElse(null))
@@ -85,7 +62,27 @@ public class Customer {
                 .setEmailAddress1(emailAddressSanitizer.sanitize(ms.getEmailAddress1()).orElse(null))
                 .setEmailAddress2(emailAddressSanitizer.sanitize(ms.getEmailAddress2()).orElse(null))
                 .setEmailAddress3(emailAddressSanitizer.sanitize(ms.getEmailAddress3()).orElse(null));
-        state = ms;
-        return this;
+
+        return setState(ms);
+    }
+
+    @Override
+    protected CustomerMutableState toMutableState(CustomerState state) {
+        return CustomerMutableSample.of(state);
+    }
+
+    @Override
+    protected CustomerState toImmutableState(CustomerState state) {
+        return CustomerSample.of(state);
+    }
+
+    @Override
+    protected CustomerId identify() {
+        return CustomerId.random();
+    }
+
+    @Override
+    protected CustomerState validate(CustomerState state) {
+        return validateState(state);
     }
 }

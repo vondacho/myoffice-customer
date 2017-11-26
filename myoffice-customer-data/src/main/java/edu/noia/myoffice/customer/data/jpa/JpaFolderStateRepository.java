@@ -1,5 +1,7 @@
 package edu.noia.myoffice.customer.data.jpa;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
@@ -15,4 +17,6 @@ public interface JpaFolderStateRepository extends
     Optional<JpaFolderState> findById(UUID id);
 
     List<JpaFolderState> findAll(Specification specification);
+
+    Page<JpaFolderState> findAll(Specification specification, Pageable pageable);
 }

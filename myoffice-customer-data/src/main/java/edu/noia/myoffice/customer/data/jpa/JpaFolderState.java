@@ -1,8 +1,8 @@
 package edu.noia.myoffice.customer.data.jpa;
 
 import edu.noia.myoffice.common.data.jpa.JpaAuditableEntity;
+import edu.noia.myoffice.customer.domain.aggregate.FolderMutableState;
 import edu.noia.myoffice.customer.domain.aggregate.FolderState;
-import edu.noia.myoffice.customer.domain.aggregate.MutableFolderState;
 import edu.noia.myoffice.customer.domain.vo.Affiliate;
 import lombok.*;
 import lombok.experimental.Accessors;
@@ -22,7 +22,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JpaFolderState extends JpaAuditableEntity implements MutableFolderState {
+public class JpaFolderState extends JpaAuditableEntity implements FolderMutableState {
 
     UUID id;
     String name;
@@ -34,7 +34,7 @@ public class JpaFolderState extends JpaAuditableEntity implements MutableFolderS
             @Column(name="primaryDebtor")
     })
     @ElementCollection
-    @CollectionTable(name = "folder_affiliates", joinColumns = @JoinColumn(name = "folderId"))
+    @CollectionTable(name = "folder_affiliates", joinColumns = @JoinColumn(name = "folder_pk"))
     Set<Affiliate> affiliates = new HashSet<>();
 
     public static JpaFolderState of(FolderState state) {

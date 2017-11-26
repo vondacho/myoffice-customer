@@ -43,7 +43,7 @@ public class FolderResource {
     private ResourceProcessor<Resource<Affiliation>> affiliationProcessor;
 
     @PostMapping
-    public ResponseEntity<Resource<Folder>> create(@RequestBody MutableFolderSample input) {
+    public ResponseEntity<Resource<Folder>> create(@RequestBody FolderMutableSample input) {
         return status(HttpStatus.CREATED)
                 .body(folderProcessor.process(new Resource<>(Folder.of(input).save(repository))));
     }
@@ -51,14 +51,14 @@ public class FolderResource {
     @PutMapping("/{id}")
     public ResponseEntity<Resource<Folder>> modify(
             @PathVariable("id") FolderId folderId,
-            @RequestBody MutableFolderSample input) {
+            @RequestBody FolderMutableSample input) {
         return ok(folderProcessor.process(new Resource<>(service.modify(folderId, input))));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Resource<Folder>> patch(
             @PathVariable("id") FolderId folderId,
-            @RequestBody MutableFolderSample input) {
+            @RequestBody FolderMutableSample input) {
         return ok(folderProcessor.process(new Resource<>(service.patch(folderId, input))));
     }
 

@@ -1,5 +1,6 @@
 package edu.noia.myoffice.customer.domain.aggregate;
 
+import edu.noia.myoffice.common.domain.entity.EntityMutableState;
 import edu.noia.myoffice.customer.domain.vo.EmailAddress;
 import edu.noia.myoffice.customer.domain.vo.PhoneNumber;
 import edu.noia.myoffice.customer.domain.vo.Profile;
@@ -7,30 +8,32 @@ import edu.noia.myoffice.customer.domain.vo.Social;
 
 import java.time.LocalDate;
 
-public interface MutableCustomerState extends CustomerState {
+public interface CustomerMutableState extends
+        CustomerState,
+        EntityMutableState<CustomerMutableState, CustomerState> {
 
-    MutableCustomerState setSalutation(String value);
-    MutableCustomerState setLastName(String value);
-    MutableCustomerState setFirstName(String value);
-    MutableCustomerState setBirthDate(LocalDate value);
-    MutableCustomerState setStreetNo(String value);
-    MutableCustomerState setZip(String value);
-    MutableCustomerState setCity(String value);
-    MutableCustomerState setRegion(String value);
-    MutableCustomerState setCountry(String value);
-    MutableCustomerState setPhoneNumber1(PhoneNumber value);
-    MutableCustomerState setPhoneNumber2(PhoneNumber value);
-    MutableCustomerState setPhoneNumber3(PhoneNumber value);
-    MutableCustomerState setPhoneNumber4(PhoneNumber value);
-    MutableCustomerState setEmailAddress1(EmailAddress value);
-    MutableCustomerState setEmailAddress2(EmailAddress value);
-    MutableCustomerState setEmailAddress3(EmailAddress value);
-    MutableCustomerState setProfile(Profile value);
-    MutableCustomerState setSocial(Social value);
-    MutableCustomerState setWebsiteUrl(String value);
-    MutableCustomerState setNotes(String value);
+    CustomerMutableState setSalutation(String value);
+    CustomerMutableState setLastName(String value);
+    CustomerMutableState setFirstName(String value);
+    CustomerMutableState setBirthDate(LocalDate value);
+    CustomerMutableState setStreetNo(String value);
+    CustomerMutableState setZip(String value);
+    CustomerMutableState setCity(String value);
+    CustomerMutableState setRegion(String value);
+    CustomerMutableState setCountry(String value);
+    CustomerMutableState setPhoneNumber1(PhoneNumber value);
+    CustomerMutableState setPhoneNumber2(PhoneNumber value);
+    CustomerMutableState setPhoneNumber3(PhoneNumber value);
+    CustomerMutableState setPhoneNumber4(PhoneNumber value);
+    CustomerMutableState setEmailAddress1(EmailAddress value);
+    CustomerMutableState setEmailAddress2(EmailAddress value);
+    CustomerMutableState setEmailAddress3(EmailAddress value);
+    CustomerMutableState setProfile(Profile value);
+    CustomerMutableState setSocial(Social value);
+    CustomerMutableState setWebsiteUrl(String value);
+    CustomerMutableState setNotes(String value);
 
-    default MutableCustomerState modify(CustomerState modifier) {
+    default CustomerMutableState modify(CustomerState modifier) {
         return setSalutation(modifier.getSalutation())
         .setFirstName(modifier.getFirstName())
         .setLastName(modifier.getLastName())
@@ -53,7 +56,7 @@ public interface MutableCustomerState extends CustomerState {
         .setNotes(modifier.getNotes());
     }
 
-    default MutableCustomerState patch(CustomerState modifier) {
+    default CustomerMutableState patch(CustomerState modifier) {
         return setSalutation(modifier.getSalutation() != null ? modifier.getSalutation() : getSalutation())
             .setFirstName(modifier.getFirstName() != null ? modifier.getFirstName() : getFirstName())
             .setLastName(modifier.getLastName() != null ? modifier.getLastName() : getLastName())

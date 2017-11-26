@@ -1,8 +1,8 @@
 package edu.noia.myoffice.customer.data.jpa;
 
 import edu.noia.myoffice.common.data.jpa.JpaAuditableEntity;
+import edu.noia.myoffice.customer.domain.aggregate.CustomerMutableState;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
-import edu.noia.myoffice.customer.domain.aggregate.MutableCustomerState;
 import edu.noia.myoffice.customer.domain.vo.EmailAddress;
 import edu.noia.myoffice.customer.domain.vo.PhoneNumber;
 import edu.noia.myoffice.customer.domain.vo.Profile;
@@ -26,7 +26,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JpaCustomerState extends JpaAuditableEntity implements MutableCustomerState {
+public class JpaCustomerState extends JpaAuditableEntity implements CustomerMutableState {
 
     UUID id;
     String salutation;

@@ -1,84 +1,87 @@
 package edu.noia.myoffice.customer.domain.aggregate;
 
+import edu.noia.myoffice.common.domain.entity.BaseEntity;
+import edu.noia.myoffice.common.util.BeanValidator;
 import edu.noia.myoffice.customer.domain.repository.FolderRepository;
-import edu.noia.myoffice.customer.domain.validation.BeanValidator;
 import edu.noia.myoffice.customer.domain.vo.*;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
+import lombok.EqualsAndHashCode;
+import lombok.NonNull;
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Set;
 
 import static java.util.Collections.unmodifiableSet;
 
-@EqualsAndHashCode(of = "id", callSuper = false)
-@RequiredArgsConstructor(staticName = "ofValid")
-@FieldDefaults(level = AccessLevel.PACKAGE)
-public class Folder {
-
-    @Getter
-    @NonNull
-    FolderId id;
-    @NonNull
-    FolderState state;
+@Slf4j
+@ToString(doNotUseGetters = true)
+@EqualsAndHashCode(callSuper = true)
+public class Folder extends BaseEntity<
+        Folder,
+        FolderId,
+        FolderState,
+        FolderMutableState,
+        FolderRepository> {
 
     public static Folder of(@NonNull FolderState state) {
-        return of(identify(), state);
+        return of(FolderId.random(), state);
     }
 
     public static Folder of(@NonNull FolderId id, @NonNull FolderState state) {
-        return ofValid(id, validate(state));
+        return ofValid(id, validateState(state));
     }
 
-    public FolderState getState() {
-        return FolderSample.of(state);
+    public static Folder ofValid(@NonNull FolderId id, @NonNull FolderState state) {
+        return new Folder().setState(state).setId(id);
+    }
+
+    private static <T> T validateState(T state) {
+        return BeanValidator.validate(state);
     }
 
     public Set<Affiliate> getAffiliates() {
         return unmodifiableSet(state.getAffiliates());
     }
 
-    private static MutableFolderState toMutable(FolderState state) {
-        return state instanceof MutableFolderState ? (MutableFolderState)state : MutableFolderSample.of(state);
-    }
-
-    public Folder affiliate(Affiliate affiliate) {
-        state = toMutable(state).add(validate(affiliate));
-        return this;
-    }
-
-    private static FolderId identify() {
-        return FolderId.random();
-    }
-
-    public Folder modify(FolderState modifier) {
-        state = toMutable(state).modify(validate(modifier));
-        return this;
-    }
-
-    public Folder modify(Affiliate modifier) {
-        state = toMutable(state).remove(modifier).add(validate(modifier));
-        return this;
-    }
-
-    public Folder patch(FolderState modifier) {
-        state = validate(toMutable(state).patch(modifier));
-        return this;
-    }
-
-    public Folder save(FolderRepository repository) {
-        return repository.save(getId(), state);
-    }
-
-    private static <T> T validate(T state) {
-        return BeanValidator.validate(state);
-    }
-
     public Folder affiliate(CustomerId customerId) {
         return affiliate(Affiliate.of(customerId));
     }
 
+    public Folder modify(Affiliate modifier) {
+        modifier = validate(modifier);
+        return setState(toMutable(state).remove(modifier).add(modifier));
+    }
+
+    public Folder affiliate(Affiliate affiliate) {
+        affiliate = validate(affiliate);
+        return setState(toMutable(state).add(affiliate));
+    }
+
     public Folder unaffiliate(CustomerId customerId) {
-        state = toMutable(state).remove(Affiliate.of(customerId));
-        return this;
+        return setState(toMutable(state).remove(Affiliate.of(customerId)));
+    }
+
+    @Override
+    protected FolderMutableState toMutableState(FolderState state) {
+        return FolderMutableSample.of(state);
+    }
+
+    @Override
+    protected FolderState toImmutableState(FolderState state) {
+        return FolderSample.of(state);
+    }
+
+    @Override
+    protected FolderId identify() {
+        return FolderId.random();
+    }
+
+    @Override
+    protected FolderState validate(FolderState state) {
+        return validateState(state);
+    }
+
+    private Affiliate validate(Affiliate affiliate) {
+        return validateState(affiliate);
     }
 }

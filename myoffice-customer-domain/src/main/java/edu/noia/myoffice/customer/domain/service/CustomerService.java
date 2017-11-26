@@ -1,12 +1,12 @@
 package edu.noia.myoffice.customer.domain.service;
 
+import edu.noia.myoffice.common.domain.util.EntityFinder;
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
 import edu.noia.myoffice.customer.domain.aggregate.FolderState;
 import edu.noia.myoffice.customer.domain.repository.CustomerRepository;
 import edu.noia.myoffice.customer.domain.repository.FolderRepository;
-import edu.noia.myoffice.customer.domain.util.EntityFinder;
 import edu.noia.myoffice.customer.domain.vo.Affiliate;
 import edu.noia.myoffice.customer.domain.vo.Affiliation;
 import edu.noia.myoffice.customer.domain.vo.CustomerId;

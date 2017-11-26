@@ -1,7 +1,7 @@
 package edu.noia.myoffice.customer.domain.vo;
 
+import edu.noia.myoffice.customer.domain.aggregate.CustomerMutableState;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
-import edu.noia.myoffice.customer.domain.aggregate.MutableCustomerState;
 import lombok.*;
 import lombok.experimental.Accessors;
 
@@ -13,7 +13,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class MutableCustomerSample implements MutableCustomerState {
+public class CustomerMutableSample implements CustomerMutableState {
     String salutation;
     String firstName;
     String lastName;
@@ -35,7 +35,7 @@ public class MutableCustomerSample implements MutableCustomerState {
     Profile profile;
     String notes;
 
-    public static MutableCustomerState of(CustomerState state) {
-        return new MutableCustomerSample().modify(state);
+    public static CustomerMutableState of(CustomerState state) {
+        return new CustomerMutableSample().modify(state);
     }
 }

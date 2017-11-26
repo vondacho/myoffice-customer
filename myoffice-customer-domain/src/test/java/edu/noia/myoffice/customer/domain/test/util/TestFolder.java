@@ -1,5 +1,6 @@
-package edu.noia.myoffice.customer.domain.util.test;
+package edu.noia.myoffice.customer.domain.test.util;
 
+import edu.noia.myoffice.common.util.RandomString;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
 import edu.noia.myoffice.customer.domain.aggregate.FolderState;
 import edu.noia.myoffice.customer.domain.vo.Affiliate;
