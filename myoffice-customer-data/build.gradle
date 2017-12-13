@@ -1,6 +1,6 @@
 dependencies {
-    compile("edu.noia.myoffice:myoffice-common-data:${myofficeCommonVersion}")
     compile("edu.noia.myoffice:myoffice-customer-domain:${version}")
+    compile("edu.noia.myoffice:myoffice-common-data:${myofficeCommonVersion}")
     compile 'org.springframework.boot:spring-boot-starter-data-jpa'
     compile 'org.springframework.boot:spring-boot-starter'
     compile 'org.hibernate:hibernate-java8:5.1.0.Final'

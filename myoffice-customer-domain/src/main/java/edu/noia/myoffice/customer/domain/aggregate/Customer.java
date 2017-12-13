@@ -51,7 +51,7 @@ public class Customer extends BaseEntity<
     }
 
     public Customer sanitize() {
-        CustomerMutableState ms = toMutable(state);
+        CustomerMutableState ms = toMutable();
         ms
                 .setLastName(nameSanitizer.sanitize(ms.getLastName()).orElse(null))
                 .setFirstName(nameSanitizer.sanitize(ms.getFirstName()).orElse(null))

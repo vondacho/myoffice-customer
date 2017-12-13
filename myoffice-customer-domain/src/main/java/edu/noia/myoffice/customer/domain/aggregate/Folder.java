@@ -49,16 +49,16 @@ public class Folder extends BaseEntity<
 
     public Folder modify(Affiliate modifier) {
         modifier = validate(modifier);
-        return setState(toMutable(state).remove(modifier).add(modifier));
+        return setState(toMutable().remove(modifier).add(modifier));
     }
 
     public Folder affiliate(Affiliate affiliate) {
         affiliate = validate(affiliate);
-        return setState(toMutable(state).add(affiliate));
+        return setState(toMutable().add(affiliate));
     }
 
     public Folder unaffiliate(CustomerId customerId) {
-        return setState(toMutable(state).remove(Affiliate.of(customerId)));
+        return setState(toMutable().remove(Affiliate.of(customerId)));
     }
 
     @Override
