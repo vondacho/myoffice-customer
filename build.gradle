@@ -1,11 +1,10 @@
 allprojects {
     apply plugin: 'java'
     group 'edu.noia.myoffice'
-    version = '0.0.7'
+    version = '0.0.8'
     repositories {
         jcenter()
         maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://repo.spring.io/snapshot" }
         mavenLocal()
         maven {
             name 'mavenRemote'
@@ -34,7 +33,6 @@ buildscript {
     repositories {
         mavenCentral()
         maven { url "https://repo.spring.io/milestone" }
-        maven { url "https://repo.spring.io/snapshot" }
         maven {
             url "https://plugins.gradle.org/m2/"
         }
@@ -109,6 +107,7 @@ project(':myoffice-customer-batch') {
 project(':myoffice-customer-data') {
     dependencies {
         compile project(':myoffice-customer-domain')
+        compile project(':myoffice-customer-messaging')
     }
 }
 

@@ -5,12 +5,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
+import java.util.function.Consumer;
+
 @Slf4j
 @Component
-public class CustomerDomainEventListener {
+public class CustomerDomainEventListener implements Consumer<BaseEvent> {
 
     @TransactionalEventListener({BaseEvent.class})
-    public void handleEvent(BaseEvent event) {
+    public void accept(BaseEvent event) {
         LOG.debug(event.toString());
     }
 }

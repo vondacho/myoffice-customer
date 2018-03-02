@@ -2,5 +2,4 @@ dependencies {
     compile("edu.noia.myoffice:myoffice-common-domain:${myofficeCommonVersion}")
     compile 'org.springframework.boot:spring-boot-starter'
     compile 'org.springframework:spring-tx'
-    compile 'de.olivergierke.events:spring-domain-events-starter:1.0.1-SNAPSHOT'
 }
