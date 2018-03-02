@@ -21,6 +21,7 @@ import static org.springframework.http.ResponseEntity.status;
 @RequiredArgsConstructor
 @RequestMapping(path = "/api/customer/v1/jobs")
 public class JobResource {
+
     @NonNull
     private SanityJob sanityJob;
     @NonNull

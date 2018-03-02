@@ -37,7 +37,7 @@ public class CustomerRepositoryAdapterTest {
         given(jpaRepository.save(any(JpaCustomerState.class)))
                 .willAnswer(invocation -> invocation.getArgument(0));
         // When
-        Customer customer1 = repositoryAdapter.save(anyCustomer);
+        Customer customer1 = repositoryAdapter.save(anyCustomer.getId(), anyState);
         Customer customer2 = repositoryAdapter.save(anyCustomer.getId(), anyState);
         // Then
         assertThat(customer1).isEqualTo(customer2);
@@ -53,7 +53,7 @@ public class CustomerRepositoryAdapterTest {
         JpaCustomerState jpaState = JpaCustomerState.of(anyState);
         given(jpaRepository.save(any(JpaCustomerState.class))).willReturn(jpaState);
         // When
-        Customer customer = repositoryAdapter.save(anyCustomer);
+        Customer customer = repositoryAdapter.save(anyCustomer.getId(), anyState);
         // Then
         assertThat(customer).isEqualTo(anyCustomer);
         Object state = ReflectionTestUtils.getField(customer,"state");

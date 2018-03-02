@@ -1,6 +1,5 @@
 package edu.noia.myoffice.customer.domain.service;
 
-import edu.noia.myoffice.customer.domain.MyOfficeCustomerDomainConfiguration;
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
@@ -21,7 +20,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {ITConfiguration.class, MyOfficeCustomerDomainConfiguration.class})
+@SpringBootTest(classes = {ITConfiguration.class})
 public class CustomerServiceIT {
 
     @Autowired

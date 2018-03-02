@@ -1,9 +1,11 @@
 allprojects {
     apply plugin: 'java'
     group 'edu.noia.myoffice'
-    version = '0.0.6'
+    version = '0.0.7'
     repositories {
         jcenter()
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://repo.spring.io/snapshot" }
         mavenLocal()
         maven {
             name 'mavenRemote'
@@ -18,13 +20,21 @@ allprojects {
 
 buildscript {
     ext {
-        springBootVersion = '1.5.8.RELEASE'
+        myofficeCommonVersion = '0.0.7'
+        springBootVersion = '2.0.0.RC1'
+        springHalBrowserVersion = '3.0.3.RELEASE'
+        springfoxVersion = '2.8.0'
         lombokVersion = '1.16.18'
         mokitoVersion = '2.8.47'
-        myofficeCommonVersion = '0.0.4'
+        jacksonVersion = '2.9.2'
+        h2databaseVersion = '1.4.196'
+        flywayVersion = '5.0.7'
+        googlePhoneVersion = '8.8.6'
     }
     repositories {
-        jcenter()
+        mavenCentral()
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://repo.spring.io/snapshot" }
         maven {
             url "https://plugins.gradle.org/m2/"
         }
@@ -85,6 +95,9 @@ subprojects {
     }
     task install(dependsOn: publishToMavenLocal)
     task deploy(dependsOn: publish)
+
+    bootJar.enabled = false
+    jar.enabled = true
 }
 
 project(':myoffice-customer-batch') {
@@ -110,6 +123,17 @@ project(':myoffice-customer-rest') {
 project(':myoffice-customer-ui') {
     dependencies {
         compile project(':myoffice-customer-rest')
+    }
+}
+
+project(':myoffice-customer-application') {
+    dependencies {
+        compile project(':myoffice-customer-domain'),
+                project(':myoffice-customer-batch'),
+                project(':myoffice-customer-data'),
+                project(':myoffice-customer-messaging'),
+                project(':myoffice-customer-rest'),
+                project(':myoffice-customer-ui')
     }
 }
 

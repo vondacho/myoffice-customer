@@ -1,8 +1,7 @@
 package edu.noia.myoffice.customer.data.jpa.hibernate.converter;
 
 import edu.noia.myoffice.customer.domain.vo.Profile;
-import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.type.BooleanType;
 import org.hibernate.usertype.UserType;
 
@@ -28,17 +27,17 @@ public class ProfileConverter implements UserType {
     }
 
     @Override
-    public boolean equals(Object x, Object y) throws HibernateException {
-        return x != null ? x.equals(y) : false;
+    public boolean equals(Object x, Object y) {
+        return x != null && x.equals(y);
     }
 
     @Override
-    public int hashCode(Object x) throws HibernateException {
+    public int hashCode(Object x) {
         return x.hashCode();
     }
 
     @Override
-    public Object nullSafeGet(ResultSet rs, String[] names, SessionImplementor session, Object owner) throws HibernateException, SQLException {
+    public Object nullSafeGet(ResultSet rs, String[] names, SharedSessionContractImplementor session, Object owner) throws SQLException {
         return Profile.of(
                 rs.getBoolean(names[0]),
                 rs.getBoolean(names[1]),
@@ -47,7 +46,7 @@ public class ProfileConverter implements UserType {
     }
 
     @Override
-    public void nullSafeSet(PreparedStatement st, Object value, int index, SessionImplementor session) throws HibernateException, SQLException {
+    public void nullSafeSet(PreparedStatement st, Object value, int index, SharedSessionContractImplementor session) throws SQLException {
         if (value != null) {
             Profile profile = (Profile) value;
             st.setBoolean(index++, profile.getHasMoved());
@@ -62,7 +61,7 @@ public class ProfileConverter implements UserType {
     }
 
     @Override
-    public Object deepCopy(Object value) throws HibernateException {
+    public Object deepCopy(Object value) {
         return value;
     }
 
@@ -72,17 +71,17 @@ public class ProfileConverter implements UserType {
     }
 
     @Override
-    public Serializable disassemble(Object value) throws HibernateException {
+    public Serializable disassemble(Object value) {
         return (Serializable)value;
     }
 
     @Override
-    public Object assemble(Serializable cached, Object owner) throws HibernateException {
+    public Object assemble(Serializable cached, Object owner) {
         return cached;
     }
 
     @Override
-    public Object replace(Object original, Object target, Object owner) throws HibernateException {
+    public Object replace(Object original, Object target, Object owner) {
         return original;
     }
 }

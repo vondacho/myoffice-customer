@@ -5,13 +5,5 @@ dependencies {
     compile("edu.noia.myoffice:myoffice-common-rest:${myofficeCommonVersion}")
     compile 'org.springframework.boot:spring-boot-starter-hateoas'
     compile 'org.springframework.boot:spring-boot-starter-web'
-    compile 'org.springframework.boot:spring-boot-starter-actuator'
-    compile 'io.springfox:springfox-swagger2:2.7.0'
-    compile 'io.springfox:springfox-swagger-ui:2.7.0'
-    compile 'com.h2database:h2:1.4.196'
     testCompile("edu.noia.myoffice:myoffice-common-testing:${myofficeCommonVersion}")
-}
-
-bootRepackage {
-    enabled = false
 }

@@ -10,7 +10,6 @@ import edu.noia.myoffice.customer.domain.service.CustomerService;
 import edu.noia.myoffice.customer.domain.vo.*;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.ResourceProcessor;
@@ -22,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.UUID;
 
+import static java.util.stream.Collectors.toList;
 import static org.springframework.http.ResponseEntity.ok;
 import static org.springframework.http.ResponseEntity.status;
 
@@ -43,22 +43,22 @@ public class FolderResource {
     private ResourceProcessor<Resource<Affiliation>> affiliationProcessor;
 
     @PostMapping
-    public ResponseEntity<Resource<Folder>> create(@RequestBody FolderMutableSample input) {
+    public ResponseEntity<Resource<Folder>> create(@RequestBody FolderSample input) {
         return status(HttpStatus.CREATED)
-                .body(folderProcessor.process(new Resource<>(Folder.of(input).save(repository))));
+                .body(folderProcessor.process(new Resource<>(service.create(input))));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Resource<Folder>> modify(
             @PathVariable("id") FolderId folderId,
-            @RequestBody FolderMutableSample input) {
+            @RequestBody FolderSample input) {
         return ok(folderProcessor.process(new Resource<>(service.modify(folderId, input))));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<Resource<Folder>> patch(
             @PathVariable("id") FolderId folderId,
-            @RequestBody FolderMutableSample input) {
+            @RequestBody FolderSample input) {
         return ok(folderProcessor.process(new Resource<>(service.patch(folderId, input))));
     }
 
@@ -84,11 +84,13 @@ public class FolderResource {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Resource<Folder>>> findAll(Pageable pageable) {
+    public ResponseEntity<List<Resource<Folder>>> findAll(Pageable pageable) {
         return ok(repository
-                .findAll(pageable)
+                .findAll()
+                .stream()
                 .map(Resource<Folder>::new)
-                .map(folderProcessor::process));
+                .map(folderProcessor::process)
+                .collect(toList()));
     }
 
     @GetMapping("/{id}/customers")

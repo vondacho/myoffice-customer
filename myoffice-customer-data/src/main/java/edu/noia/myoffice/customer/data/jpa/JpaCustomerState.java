@@ -1,7 +1,8 @@
 package edu.noia.myoffice.customer.data.jpa;
 
 import edu.noia.myoffice.common.data.jpa.JpaAuditableEntity;
-import edu.noia.myoffice.customer.domain.aggregate.CustomerMutableState;
+import edu.noia.myoffice.common.domain.entity.EntityState;
+import edu.noia.myoffice.common.domain.event.Event;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
 import edu.noia.myoffice.customer.domain.vo.EmailAddress;
 import edu.noia.myoffice.customer.domain.vo.PhoneNumber;
@@ -12,12 +13,22 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
+import org.springframework.data.domain.AfterDomainEventPublication;
+import org.springframework.data.domain.DomainEvents;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.UUID;
 
+@Audited
+@Table(name = "customer_state")
 @ToString
 @Entity
 @EqualsAndHashCode(of = "id", callSuper = false)
@@ -26,7 +37,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JpaCustomerState extends JpaAuditableEntity implements CustomerMutableState {
+public class JpaCustomerState extends JpaAuditableEntity implements CustomerState {
 
     UUID id;
     String salutation;
@@ -111,8 +122,30 @@ public class JpaCustomerState extends JpaAuditableEntity implements CustomerMuta
 
     String notes;
 
+    @Transient
+    List<Event> domainEvents = new ArrayList<>();
+
     public static JpaCustomerState of(CustomerState state) {
         return (JpaCustomerState)(new JpaCustomerState().modify(state));
     }
 
+    @Override
+    public CustomerState modify(EntityState modifier) {
+        return modifier instanceof JpaCustomerState ? modify((JpaCustomerState)modifier) : this;
+    }
+
+    @Override
+    public CustomerState patch(EntityState modifier) {
+        return modifier instanceof JpaCustomerState ? patch((JpaCustomerState)modifier) : this;
+    }
+
+    @DomainEvents
+    public List<Event> domainEvents() {
+        return Collections.unmodifiableList(domainEvents);
+    }
+
+    @AfterDomainEventPublication
+    void clearDomainEvents() {
+        domainEvents.clear();
+    }
 }

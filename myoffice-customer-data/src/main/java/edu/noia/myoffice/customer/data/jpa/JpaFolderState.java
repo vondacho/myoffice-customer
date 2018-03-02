@@ -1,7 +1,8 @@
 package edu.noia.myoffice.customer.data.jpa;
 
-import edu.noia.myoffice.common.data.jpa.JpaAuditableEntity;
-import edu.noia.myoffice.customer.domain.aggregate.FolderMutableState;
+import edu.noia.myoffice.common.data.jpa.JpaBaseEntity;
+import edu.noia.myoffice.common.domain.entity.EntityState;
+import edu.noia.myoffice.common.domain.event.Event;
 import edu.noia.myoffice.customer.domain.aggregate.FolderState;
 import edu.noia.myoffice.customer.domain.vo.Affiliate;
 import lombok.*;
@@ -9,12 +10,15 @@ import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.Columns;
 import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
+import org.springframework.data.domain.AfterDomainEventPublication;
+import org.springframework.data.domain.DomainEvents;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
+@Audited
+@Table(name = "folder_state")
 @Entity
 @EqualsAndHashCode(of = "id", callSuper = false)
 @Accessors(chain=true)
@@ -22,7 +26,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JpaFolderState extends JpaAuditableEntity implements FolderMutableState {
+public class JpaFolderState extends JpaBaseEntity implements FolderState {
 
     UUID id;
     String name;
@@ -37,7 +41,30 @@ public class JpaFolderState extends JpaAuditableEntity implements FolderMutableS
     @CollectionTable(name = "folder_affiliates", joinColumns = @JoinColumn(name = "folder_pk"))
     Set<Affiliate> affiliates = new HashSet<>();
 
+    @Transient
+    List<Event> domainEvents = new ArrayList<>();
+
     public static JpaFolderState of(FolderState state) {
         return (JpaFolderState)(new JpaFolderState().modify(state).add(state.getAffiliates()));
+    }
+
+    @Override
+    public FolderState modify(EntityState modifier) {
+        return modifier instanceof JpaFolderState ? modify((JpaFolderState)modifier) : this;
+    }
+
+    @Override
+    public FolderState patch(EntityState modifier) {
+        return modifier instanceof JpaFolderState ? patch((JpaFolderState)modifier) : this;
+    }
+
+    @DomainEvents
+    public List<Event> domainEvents() {
+        return Collections.unmodifiableList(domainEvents);
+    }
+
+    @AfterDomainEventPublication
+    void clearDomainEvents() {
+        domainEvents.clear();
     }
 }

@@ -1,6 +1,6 @@
 package edu.noia.myoffice.customer.data.adapter;
 
-import edu.noia.myoffice.customer.data.MyOfficeCustomerDataApplication;
+import edu.noia.myoffice.customer.data.CustomerDataComponentConfig;
 import edu.noia.myoffice.customer.data.jpa.JpaCustomerState;
 import edu.noia.myoffice.customer.data.jpa.JpaCustomerStateRepository;
 import edu.noia.myoffice.customer.data.test.util.TestCustomer;
@@ -8,10 +8,10 @@ import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,8 +19,8 @@ import javax.persistence.PersistenceContext;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = {MyOfficeCustomerDataApplication.class})
-@Transactional
+@ContextConfiguration(classes = {CustomerDataComponentConfig.class})
+@DataJpaTest
 public class CustomerRepositoryAdapterIT {
 
     @Autowired
@@ -35,7 +35,7 @@ public class CustomerRepositoryAdapterIT {
         // Given
         Customer anyCustomer = TestCustomer.random();
         // When
-        Customer customer = repositoryAdapter.save(anyCustomer);
+        Customer customer = repositoryAdapter.save(anyCustomer.getId(), anyCustomer.getState());
         flushClear();
         // Then
         assertThat(customer).isEqualTo(anyCustomer);
@@ -49,7 +49,7 @@ public class CustomerRepositoryAdapterIT {
         // Given
         Customer anyCustomer = TestCustomer.random();
         // When
-        Customer customer = repositoryAdapter.save(anyCustomer);
+        Customer customer = repositoryAdapter.save(anyCustomer.getId(), anyCustomer.getState());
         flushClear();
         // Then
         JpaCustomerState jpaCustomer = jpaRepository.findById(customer.getId().getId()).orElse(null);
@@ -63,7 +63,7 @@ public class CustomerRepositoryAdapterIT {
         repositoryAdapter.findAll().forEach(customer -> customer.save(repositoryAdapter));
     }
 
-    protected void flushClear() {
+    private void flushClear() {
         em.flush();
         em.clear();
     }

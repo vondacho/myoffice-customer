@@ -15,8 +15,8 @@ public class AffiliationLinkProcessor implements ResourceProcessor<Resource<Affi
     @Override
     public Resource<Affiliation> process(Resource<Affiliation> affiliationResource) {
         Affiliation data = affiliationResource.getContent();
-        affiliationResource.add(linkTo(CustomerResource.class).slash(data.getCustomer()).withRel("customer"));
-        affiliationResource.add(linkTo(FolderResource.class).slash(data.getFolder()).withRel("folder"));
+        affiliationResource.add(linkTo(CustomerResource.class).slash(data.getCustomer().getId()).withRel("customer"));
+        affiliationResource.add(linkTo(FolderResource.class).slash(data.getFolder().getId()).withRel("folder"));
         return affiliationResource;
     }
 }

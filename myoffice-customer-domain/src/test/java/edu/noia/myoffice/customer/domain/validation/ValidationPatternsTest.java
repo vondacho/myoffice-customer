@@ -2,10 +2,10 @@ package edu.noia.myoffice.customer.domain.validation;
 
 import org.junit.Test;
 
-import static edu.noia.myoffice.common.util.RegexMatcher.matchesRegex;
+import static edu.noia.myoffice.common.util.regex.RegexMatcher.matchesRegex;
 import static edu.noia.myoffice.customer.domain.validation.ValidationPatterns.*;
-import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
+import static org.junit.Assert.assertThat;
 
 public class ValidationPatternsTest {
     @Test

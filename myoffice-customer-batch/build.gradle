@@ -1,7 +1,5 @@
 dependencies {
     compile("edu.noia.myoffice:myoffice-customer-domain:${version}")
-}
-
-bootRepackage {
-    enabled = false
+    compile("edu.noia.myoffice:myoffice-common-util:${myofficeCommonVersion}")
+    compile 'org.springframework.data:spring-data-commons'
 }

@@ -1,17 +1,21 @@
 package edu.noia.myoffice.customer.batch.job;
 
-import edu.noia.myoffice.customer.batch.util.ChunkPageable;
+import edu.noia.myoffice.common.util.data.ChunkPageable;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 @Slf4j
-@Service
+@Component
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class FolderingJob {
+
     @Autowired
-    private FolderingChunk folderingChunk;
+    FolderingChunkExecutor chunkExecutor;
 
     @Async("batchingTaskExecutor")
     public void execute() {
@@ -19,7 +23,7 @@ public class FolderingJob {
         Pageable pageable = new ChunkPageable();
         do {
             LOG.debug("Execution of next foldering job chunk is on going: {}", pageable.toString());
-            pageable = folderingChunk.execute(pageable).orElse(null);
+            pageable = chunkExecutor.execute(pageable).orElse(null);
         }
         while (pageable != null);
         LOG.debug("Execution of foldering job is terminated");

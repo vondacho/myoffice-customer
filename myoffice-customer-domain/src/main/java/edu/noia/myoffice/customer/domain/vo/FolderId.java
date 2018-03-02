@@ -12,7 +12,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class FolderId implements Identity {
     @NonNull
-    UUID id;
+    final UUID id;
 
     public static FolderId random() {
         return new FolderId(UUID.randomUUID());

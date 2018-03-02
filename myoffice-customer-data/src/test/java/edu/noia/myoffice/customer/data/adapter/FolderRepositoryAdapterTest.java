@@ -39,7 +39,7 @@ public class FolderRepositoryAdapterTest {
         given(jpaRepository.save(any(JpaFolderState.class)))
                 .willAnswer(invocation -> invocation.getArgument(0));
         // When
-        Folder folder1 = repositoryAdapter.save(anyFolder);
+        Folder folder1 = repositoryAdapter.save(anyFolder.getId(), anyState);
         Folder folder2 = repositoryAdapter.save(anyFolder.getId(), anyState);
         // Then
         assertThat(folder1).isEqualTo(folder2);
@@ -55,7 +55,7 @@ public class FolderRepositoryAdapterTest {
         JpaFolderState jpaState = JpaFolderState.of(anyState);
         given(jpaRepository.save(any(JpaFolderState.class))).willReturn(jpaState);
         // When
-        Folder folder = repositoryAdapter.save(anyFolder);
+        Folder folder = repositoryAdapter.save(anyFolder.getId(), anyState);
         // Then
         assertThat(folder).isEqualTo(anyFolder);
         Object state = ReflectionTestUtils.getField(folder,"state");
@@ -73,7 +73,7 @@ public class FolderRepositoryAdapterTest {
         given(jpaRepository.save(any(JpaFolderState.class)))
                 .willAnswer(invocation -> invocation.getArgument(0));
         // When
-        Folder folder = repositoryAdapter.save(anyFolder);
+        Folder folder = repositoryAdapter.save(anyFolder.getId(), anyFolder.getState());
         // Then
         assertThat(folder.getState()).isEqualTo(anyFolder.getState());
         assertThat(folder.getAffiliates()).containsExactlyInAnyOrder(affiliate1, affiliate2);
@@ -88,7 +88,7 @@ public class FolderRepositoryAdapterTest {
         given(jpaRepository.save(any(JpaFolderState.class)))
                 .willAnswer(invocation -> invocation.getArgument(0));
         // When
-        Folder folder = repositoryAdapter.save(anyFolder);
+        Folder folder = repositoryAdapter.save(anyFolder.getId(), anyFolder.getState());
         // Then
         assertThat(folder.getAffiliates()).containsExactly(affiliate);
         verify(jpaRepository).save(any(JpaFolderState.class));

@@ -1,0 +1,13 @@
+dependencies {
+    compile("edu.noia.myoffice:myoffice-customer-domain:${version}")
+    compile("edu.noia.myoffice:myoffice-customer-data:${version}")
+    compile("edu.noia.myoffice:myoffice-customer-messaging:${version}")
+    compile("edu.noia.myoffice:myoffice-customer-rest:${version}")
+    compile("edu.noia.myoffice:myoffice-customer-batch:${version}")
+    compile 'org.springframework.boot:spring-boot-starter-actuator'
+    compile("io.springfox:springfox-swagger2:${springfoxVersion}")
+    compile("io.springfox:springfox-swagger-ui:${springfoxVersion}")
+    compile("org.flywaydb:flyway-core:${flywayVersion}")
+    compile("com.h2database:h2:${h2databaseVersion}")
+    compile 'mysql:mysql-connector-java'
+}

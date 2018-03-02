@@ -3,9 +3,7 @@ dependencies {
     compile("edu.noia.myoffice:myoffice-common-util:${myofficeCommonVersion}")
     compile 'org.springframework.boot:spring-boot-starter'
     compile 'org.springframework.boot:spring-boot-starter-validation'
-    compile 'com.googlecode.libphonenumber:libphonenumber:8.8.6'
-}
-
-bootRepackage {
-    enabled = false
+    compile 'org.springframework:spring-tx'
+    compile("com.googlecode.libphonenumber:libphonenumber:${googlePhoneVersion}")
+    testCompile 'nl.jqno.equalsverifier:equalsverifier:2.4'
 }

@@ -1,25 +1,34 @@
 package edu.noia.myoffice.customer.domain.vo;
 
+import edu.noia.myoffice.common.domain.entity.EntityState;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
 import lombok.*;
+import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
 
 @EqualsAndHashCode(callSuper = false)
+@Accessors(chain = true)
+@Setter
 @Getter
-@Builder(builderMethodName = "hiddenBuilder", toBuilder = true)
+@RequiredArgsConstructor(staticName = "of")
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public final class CustomerSample implements CustomerState {
 
     String salutation;
     String firstName;
+    @NonNull
     String lastName;
     LocalDate birthDate;
     String streetNo;
+    @NonNull
     String zip;
+    @NonNull
     String city;
     String region;
+    @NonNull
     String country;
     PhoneNumber phoneNumber1;
     PhoneNumber phoneNumber2;
@@ -34,32 +43,32 @@ public final class CustomerSample implements CustomerState {
     String notes;
 
     public static CustomerSample of(CustomerState state) {
-        return CustomerSample.builder(state.getLastName(), state.getZip(), state.getCity(), state.getCountry())
-                .salutation(state.getSalutation())
-                .firstName(state.getFirstName())
-                .birthDate(state.getBirthDate())
-                .streetNo(state.getStreetNo())
-                .region(state.getRegion())
-                .emailAddress1(state.getEmailAddress1())
-                .emailAddress2(state.getEmailAddress2())
-                .emailAddress3(state.getEmailAddress3())
-                .phoneNumber1(state.getPhoneNumber1())
-                .phoneNumber2(state.getPhoneNumber2())
-                .phoneNumber3(state.getPhoneNumber3())
-                .phoneNumber4(state.getPhoneNumber4())
-                .profile(state.getProfile())
-                .social(state.getSocial())
-                .websiteUrl(state.getWebsiteUrl())
-                .notes(state.getNotes())
-                .build();
+        return CustomerSample.of(state.getLastName(), state.getZip(), state.getCity(), state.getCountry())
+                .setSalutation(state.getSalutation())
+                .setFirstName(state.getFirstName())
+                .setBirthDate(state.getBirthDate())
+                .setStreetNo(state.getStreetNo())
+                .setRegion(state.getRegion())
+                .setEmailAddress1(state.getEmailAddress1())
+                .setEmailAddress2(state.getEmailAddress2())
+                .setEmailAddress3(state.getEmailAddress3())
+                .setPhoneNumber1(state.getPhoneNumber1())
+                .setPhoneNumber2(state.getPhoneNumber2())
+                .setPhoneNumber3(state.getPhoneNumber3())
+                .setPhoneNumber4(state.getPhoneNumber4())
+                .setProfile(state.getProfile())
+                .setSocial(state.getSocial())
+                .setWebsiteUrl(state.getWebsiteUrl())
+                .setNotes(state.getNotes());
     }
 
-    public static CustomerSampleBuilder builder(
-            @NonNull String lastName, @NonNull String zip, @NonNull String city, @NonNull String country) {
-        return hiddenBuilder()
-                .lastName(lastName)
-                .zip(zip)
-                .city(city)
-                .country(country);
+    @Override
+    public CustomerState modify(EntityState modifier) {
+        return modifier instanceof CustomerState ? modify((CustomerState)modifier) : this;
+    }
+
+    @Override
+    public CustomerState patch(EntityState modifier) {
+        return modifier instanceof CustomerState ? patch((CustomerState)modifier) : this;
     }
 }

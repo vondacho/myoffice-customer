@@ -11,19 +11,26 @@ import edu.noia.myoffice.customer.domain.vo.Affiliate;
 import edu.noia.myoffice.customer.domain.vo.Affiliation;
 import edu.noia.myoffice.customer.domain.vo.CustomerId;
 import edu.noia.myoffice.customer.domain.vo.FolderId;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CustomerService {
 
-    @Autowired
+    @NonNull
     private CustomerRepository customerRepository;
-    @Autowired
+    @NonNull
     private FolderRepository folderRepository;
+
+    @Transactional
+    public Folder create(FolderState data) {
+        return Folder.of(data).save(folderRepository);
+    }
 
     @Transactional
     public Affiliation create(CustomerState data) {
@@ -94,11 +101,11 @@ public class CustomerService {
         return findFolder(folderId).modify(modifier).save(folderRepository);
     }
 
-    Folder findFolder(FolderId id) {
+    private Folder findFolder(FolderId id) {
         return EntityFinder.find(Folder.class, id, folderRepository::findOne);
     }
 
-    Customer findCustomer(CustomerId id) {
+    private Customer findCustomer(CustomerId id) {
         return EntityFinder.find(Customer.class, id, customerRepository::findOne);
     }
 }

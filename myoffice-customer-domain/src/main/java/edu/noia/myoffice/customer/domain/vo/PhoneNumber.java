@@ -3,8 +3,6 @@ package edu.noia.myoffice.customer.domain.vo;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -18,7 +16,6 @@ public class PhoneNumber {
     @NotNull
     private String number;
 
-    @Enumerated(EnumType.STRING)
     @NotNull
     private Kind kind;
 

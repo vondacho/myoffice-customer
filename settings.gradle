@@ -1,3 +1,9 @@
 rootProject.name = 'myoffice-customer'
-include 'myoffice-customer-domain','myoffice-customer-ui','myoffice-customer-rest','myoffice-customer-data','myoffice-customer-batch'
+include 'myoffice-customer-domain',
+        'myoffice-customer-ui',
+        'myoffice-customer-rest',
+        'myoffice-customer-data',
+        'myoffice-customer-batch',
+        'myoffice-customer-application',
+        'myoffice-customer-messaging'
 
