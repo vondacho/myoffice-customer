@@ -1,6 +1,7 @@
 package edu.noia.myoffice.customer.domain.aggregate;
 
 import edu.noia.myoffice.common.domain.entity.BaseEntity;
+import edu.noia.myoffice.common.domain.event.BaseEvent;
 import edu.noia.myoffice.common.util.validation.BeanValidator;
 import edu.noia.myoffice.customer.domain.event.CustomerCreatedEventPayload;
 import edu.noia.myoffice.customer.domain.service.EmailAddressSanitizer;
@@ -36,7 +37,7 @@ public class Customer extends BaseEntity<Customer, CustomerId, CustomerState> {
 
     public static Customer ofValid(@NonNull CustomerId id, @NonNull CustomerState state) {
         Customer customer = new Customer(id, CustomerSample.of(validateState(state)));
-        return customer.andEvent(CustomerCreatedEventPayload.of(id, (CustomerSample) customer.state));
+        return customer.andEvent(BaseEvent.of(CustomerCreatedEventPayload.of(id, (CustomerSample) customer.state)));
     }
 
     public Folder folderize() {

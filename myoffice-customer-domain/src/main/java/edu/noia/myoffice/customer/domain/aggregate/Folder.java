@@ -1,6 +1,7 @@
 package edu.noia.myoffice.customer.domain.aggregate;
 
 import edu.noia.myoffice.common.domain.entity.BaseEntity;
+import edu.noia.myoffice.common.domain.event.BaseEvent;
 import edu.noia.myoffice.common.util.validation.BeanValidator;
 import edu.noia.myoffice.customer.domain.event.AffiliateCreatedEventPayload;
 import edu.noia.myoffice.customer.domain.event.AffiliateRemovedEventPayload;
@@ -35,7 +36,7 @@ public class Folder extends BaseEntity<Folder, FolderId, FolderState> {
 
     public static Folder ofValid(@NonNull FolderId id, @NonNull FolderState state) {
         Folder folder = new Folder(id, FolderSample.of(state));
-        return folder.andEvent(FolderCreatedEventPayload.of(id, (FolderSample) folder.state));
+        return folder.andEvent(BaseEvent.of(FolderCreatedEventPayload.of(id, (FolderSample) folder.state)));
     }
 
     private static <T> T validateState(T state) {
@@ -64,12 +65,12 @@ public class Folder extends BaseEntity<Folder, FolderId, FolderState> {
     public Folder affiliate(Affiliate affiliate) {
         affiliate = validate(affiliate);
         state.add(affiliate);
-        return andEvent(AffiliateCreatedEventPayload.of(getId(), affiliate.getCustomerId()));
+        return andEvent(BaseEvent.of(AffiliateCreatedEventPayload.of(getId(), affiliate.getCustomerId())));
     }
 
     public Folder unaffiliate(CustomerId customerId) {
         state.remove(Affiliate.of(customerId));
-        return andEvent(AffiliateRemovedEventPayload.of(getId(), customerId));
+        return andEvent(BaseEvent.of(AffiliateRemovedEventPayload.of(getId(), customerId)));
     }
 
     private Affiliate validate(Affiliate affiliate) {

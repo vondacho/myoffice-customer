@@ -1,6 +1,5 @@
 package edu.noia.myoffice.customer.domain.event;
 
-import edu.noia.myoffice.common.domain.event.EventPayload;
 import edu.noia.myoffice.customer.domain.vo.FolderId;
 import edu.noia.myoffice.customer.domain.vo.FolderSample;
 import lombok.Getter;
@@ -9,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor(staticName = "of")
-public class FolderCreatedEventPayload implements EventPayload {
+public class FolderCreatedEventPayload {
 
     @NonNull
     FolderId folderId;
