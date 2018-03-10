@@ -1,5 +1,6 @@
 package edu.noia.myoffice.customer.domain.service;
 
+import edu.noia.myoffice.common.domain.event.EventPublisher;
 import edu.noia.myoffice.common.domain.util.EntityFinder;
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
@@ -13,11 +14,9 @@ import edu.noia.myoffice.customer.domain.vo.CustomerId;
 import edu.noia.myoffice.customer.domain.vo.FolderId;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomerService {
@@ -26,20 +25,22 @@ public class CustomerService {
     private CustomerRepository customerRepository;
     @NonNull
     private FolderRepository folderRepository;
+    @NonNull
+    private EventPublisher eventPublisher;
 
     @Transactional
     public Folder create(FolderState data) {
-        return Folder.of(data).save(folderRepository);
+        return Folder.of(data).save(folderRepository, eventPublisher);
     }
 
     @Transactional
     public Affiliation create(CustomerState data) {
-        return affiliate(Customer.of(data).save(customerRepository));
+        return affiliate(Customer.of(data).save(customerRepository, eventPublisher));
     }
 
     @Transactional
     public Affiliation create(CustomerState data, FolderId folderId) {
-        return affiliate(findFolder(folderId), Customer.of(data).save(customerRepository));
+        return affiliate(findFolder(folderId), Customer.of(data).save(customerRepository, eventPublisher));
     }
 
     @Transactional
@@ -59,11 +60,11 @@ public class CustomerService {
 
     private Affiliation affiliate(Folder folder, Affiliate affiliate) {
         Customer customer = findCustomer(affiliate.getCustomerId());
-        return Affiliation.of(folder.affiliate(affiliate).save(folderRepository), customer);
+        return Affiliation.of(folder.affiliate(affiliate).save(folderRepository, eventPublisher), customer);
     }
 
     private Affiliation affiliate(Folder folder, Customer customer) {
-        return Affiliation.of(folder.affiliate(customer.getId()).save(folderRepository), customer);
+        return Affiliation.of(folder.affiliate(customer.getId()).save(folderRepository, eventPublisher), customer);
     }
 
     @Transactional
@@ -73,32 +74,32 @@ public class CustomerService {
 
     @Transactional
     public Folder unaffiliate(FolderId folderId, CustomerId customerId) {
-        return findFolder(folderId).unaffiliate(customerId).save(folderRepository);
+        return findFolder(folderId).unaffiliate(customerId).save(folderRepository, eventPublisher);
     }
 
     @Transactional
     public Customer modify(CustomerId customerId, CustomerState modifier) {
-        return findCustomer(customerId).modify(modifier).save(customerRepository);
+        return findCustomer(customerId).modify(modifier).save(customerRepository, eventPublisher);
     }
 
     @Transactional
     public Customer patch(CustomerId customerId, CustomerState modifier) {
-        return findCustomer(customerId).patch(modifier).save(customerRepository);
+        return findCustomer(customerId).patch(modifier).save(customerRepository, eventPublisher);
     }
 
     @Transactional
     public Folder modify(FolderId folderId, FolderState modifier) {
-        return findFolder(folderId).modify(modifier).save(folderRepository);
+        return findFolder(folderId).modify(modifier).save(folderRepository, eventPublisher);
     }
 
     @Transactional
     public Folder patch(FolderId folderId, FolderState modifier) {
-        return findFolder(folderId).patch(modifier).save(folderRepository);
+        return findFolder(folderId).patch(modifier).save(folderRepository, eventPublisher);
     }
 
     @Transactional
     public Folder modify(FolderId folderId, Affiliate modifier) {
-        return findFolder(folderId).modify(modifier).save(folderRepository);
+        return findFolder(folderId).modify(modifier).save(folderRepository, eventPublisher);
     }
 
     private Folder findFolder(FolderId id) {

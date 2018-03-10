@@ -15,11 +15,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableJpaRepositories(
-        basePackages = { "edu.noia.myoffice.customer.data.jpa", "edu.noia.myoffice.common.data.jpa" }/*,
+        basePackages = {
+                "edu.noia.myoffice.customer.data.jpa",
+                "edu.noia.myoffice.common.data.jpa" }/*,
         repositoryFactoryBeanClass = EnversRevisionRepositoryFactoryBean.class*/
 )
 @EntityScan(
-        basePackages = { "edu.noia.myoffice.customer.data.jpa", "edu.noia.myoffice.common.data.jpa" }
+        basePackages = {
+                "edu.noia.myoffice.customer.data.jpa",
+                "edu.noia.myoffice.common.data.jpa" }
 )
 @Configuration
 public class CustomerDataComponentConfig {

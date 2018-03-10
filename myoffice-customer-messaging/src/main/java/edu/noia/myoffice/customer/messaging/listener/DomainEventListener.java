@@ -1,24 +1,24 @@
 package edu.noia.myoffice.customer.messaging.listener;
 
-import edu.noia.myoffice.common.domain.event.BaseEvent;
+import edu.noia.myoffice.common.domain.event.Event;
 import edu.noia.myoffice.common.event.store.InternalEventStore;
-import lombok.extern.slf4j.Slf4j;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.event.TransactionalEventListener;
 
 import java.util.function.Consumer;
 
-@Slf4j
 @Component
-public class CustomerDomainEventListener implements Consumer<BaseEvent> {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class DomainEventListener implements Consumer<Event> {
 
     @Autowired
     InternalEventStore internalEventStore;
 
-    @TransactionalEventListener({BaseEvent.class})
-    public void accept(BaseEvent event) {
-        LOG.debug(event.toString());
+    @EventListener(value = {Event.class})
+    public void accept(Event event) {
         internalEventStore.accept(event);
     }
 }

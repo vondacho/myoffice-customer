@@ -24,6 +24,6 @@ public class ITConfiguration {
     @Bean
     public CustomerService customerService(CustomerRepository customerRepository,
                                            FolderRepository folderRepository) {
-        return new CustomerService(customerRepository, folderRepository);
+        return new CustomerService(customerRepository, folderRepository, event -> {});
     }
 }
