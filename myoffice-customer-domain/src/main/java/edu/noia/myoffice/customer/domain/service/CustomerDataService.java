@@ -5,6 +5,7 @@ import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
 import edu.noia.myoffice.customer.domain.repository.CustomerRepository;
 import edu.noia.myoffice.customer.domain.repository.FolderRepository;
+import edu.noia.myoffice.customer.domain.vo.CustomerId;
 import edu.noia.myoffice.customer.domain.vo.FolderId;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -25,11 +26,16 @@ public class CustomerDataService {
     private FolderRepository folderRepository;
 
     @Transactional(readOnly = true)
-    public List<Customer> findAllCustomers(FolderId folderId) {
+    public List<Customer> findCustomersByFolder(FolderId folderId) {
         return EntityFinder.find(Folder.class, folderId, folderRepository::findOne)
                 .getAffiliates()
                 .stream()
                 .map(affiliate -> EntityFinder.find(Customer.class, affiliate.getCustomerId(), customerRepository::findOne))
                 .collect(toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<Folder> findFoldersByCustomer(CustomerId customerId) {
+        return folderRepository.findAllByAffiliate(customerId);
     }
 }

@@ -4,6 +4,7 @@ import edu.noia.myoffice.common.data.jpa.JpaBaseEntity;
 import edu.noia.myoffice.common.domain.entity.EntityState;
 import edu.noia.myoffice.customer.domain.aggregate.FolderState;
 import edu.noia.myoffice.customer.domain.vo.Affiliate;
+import edu.noia.myoffice.customer.domain.vo.FolderId;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
@@ -12,12 +13,14 @@ import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.UUID;
+
+import static edu.noia.myoffice.common.util.exception.ExceptionSuppliers.notFound;
 
 @Audited
-@Table(name = "folder_state")
+@Table(name = "folder")
 @Entity
 @EqualsAndHashCode(of = "id", callSuper = false)
 @Accessors(chain=true)
@@ -27,7 +30,7 @@ import java.util.UUID;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class JpaFolderState extends JpaBaseEntity implements FolderState {
 
-    UUID id;
+    FolderId id;
     String name;
     String notes;
 
@@ -37,20 +40,47 @@ public class JpaFolderState extends JpaBaseEntity implements FolderState {
             @Column(name="primaryDebtor")
     })
     @ElementCollection
-    @CollectionTable(name = "folder_affiliates", joinColumns = @JoinColumn(name = "folder_pk"))
+    @CollectionTable(name = "folder_affiliate", joinColumns = @JoinColumn(name = "fk_folder"))
     Set<Affiliate> affiliates = new HashSet<>();
 
     public static JpaFolderState of(FolderState state) {
-        return (JpaFolderState)(new JpaFolderState().modify(state).add(state.getAffiliates()));
+        return new JpaFolderState().modify((EntityState)state);
     }
 
     @Override
-    public FolderState modify(EntityState modifier) {
-        return modifier instanceof JpaFolderState ? modify((JpaFolderState)modifier) : this;
+    public JpaFolderState modify(EntityState modifier) {
+        return modifier instanceof FolderState ? (JpaFolderState)modify((FolderState)modifier) : this;
     }
 
     @Override
-    public FolderState patch(EntityState modifier) {
-        return modifier instanceof JpaFolderState ? patch((JpaFolderState)modifier) : this;
+    public JpaFolderState patch(EntityState modifier) {
+        return modifier instanceof FolderState ? (JpaFolderState)patch((FolderState)modifier) : this;
     }
+
+    @Override
+    public JpaFolderState addAffiliate(Affiliate affiliate) {
+        getAffiliates().add(affiliate);
+        return this;
+    }
+
+    @Override
+    public JpaFolderState addAffiliates(Collection<Affiliate> affiliates) {
+        getAffiliates().addAll(affiliates);
+        return this;
+    }
+
+    @Override
+    public JpaFolderState removeAffiliate(Affiliate affiliate) {
+        if (!getAffiliates().remove(affiliate)) {
+            throw notFound(Affiliate.class, affiliate.getCustomerId()).get();
+        }
+        return this;
+    }
+
+    @Override
+    public JpaFolderState clearAffiliates() {
+        getAffiliates().clear();
+        return this;
+    }
+
 }

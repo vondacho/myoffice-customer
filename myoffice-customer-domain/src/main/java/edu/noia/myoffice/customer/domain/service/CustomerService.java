@@ -6,6 +6,8 @@ import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
 import edu.noia.myoffice.customer.domain.aggregate.FolderState;
+import edu.noia.myoffice.customer.domain.event.CustomerDeletedEventPayload;
+import edu.noia.myoffice.customer.domain.event.FolderDeletedEventPayload;
 import edu.noia.myoffice.customer.domain.repository.CustomerRepository;
 import edu.noia.myoffice.customer.domain.repository.FolderRepository;
 import edu.noia.myoffice.customer.domain.vo.Affiliate;
@@ -69,7 +71,7 @@ public class CustomerService {
 
     @Transactional
     public Affiliation affiliate(Customer customer) {
-        return affiliate(customer.folderize(), customer);
+        return affiliate(Folder.of(customer.folderize()), customer);
     }
 
     @Transactional
@@ -100,6 +102,22 @@ public class CustomerService {
     @Transactional
     public Folder modify(FolderId folderId, Affiliate modifier) {
         return findFolder(folderId).modify(modifier).save(folderRepository, eventPublisher);
+    }
+
+    @Transactional
+    public void delete(FolderId folderId) {
+        findFolder(folderId);
+        folderRepository.delete(folderId);
+        eventPublisher.publish(FolderDeletedEventPayload.of(folderId));
+    }
+
+    @Transactional
+    public void delete(CustomerId customerId) {
+        findCustomer(customerId);
+        folderRepository.findAllByAffiliate(customerId).forEach(folder ->
+                folder.unaffiliate(customerId).save(folderRepository, eventPublisher));
+        customerRepository.delete(customerId);
+        eventPublisher.publish(CustomerDeletedEventPayload.of(customerId));
     }
 
     private Folder findFolder(FolderId id) {

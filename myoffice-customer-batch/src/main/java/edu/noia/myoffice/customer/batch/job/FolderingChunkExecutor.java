@@ -23,7 +23,7 @@ public class FolderingChunkExecutor {
         return Optional.empty();
         /* TODO
         Page<Customer> page = customerRepository.findAll(pageable);
-        page.forEach(customer -> customer.folderize().save(folderRepository));
+        page.forEach(customer -> Folder.of(customer.folderize()).save(folderRepository));
         return page.isLast() ? Optional.empty() : Optional.of(pageable.next());*/
     }
 }

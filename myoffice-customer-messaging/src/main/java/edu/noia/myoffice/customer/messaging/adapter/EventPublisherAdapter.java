@@ -15,7 +15,7 @@ public class EventPublisherAdapter implements EventPublisher {
     ApplicationEventPublisher applicationEventPublisher;
 
     @Override
-    public void accept(Event event) {
+    public void publish(Event event) {
         applicationEventPublisher.publishEvent(event);
     }
 }

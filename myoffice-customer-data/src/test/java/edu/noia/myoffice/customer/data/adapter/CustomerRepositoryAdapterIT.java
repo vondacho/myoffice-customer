@@ -3,6 +3,7 @@ package edu.noia.myoffice.customer.data.adapter;
 import edu.noia.myoffice.customer.data.CustomerDataComponentConfig;
 import edu.noia.myoffice.customer.data.jpa.JpaCustomerState;
 import edu.noia.myoffice.customer.data.jpa.JpaCustomerStateRepository;
+import edu.noia.myoffice.customer.data.test.config.ConfigurationIT;
 import edu.noia.myoffice.customer.data.test.util.TestCustomer;
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import org.junit.Test;
@@ -19,7 +20,7 @@ import javax.persistence.PersistenceContext;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {CustomerDataComponentConfig.class})
+@ContextConfiguration(classes = {CustomerDataComponentConfig.class, ConfigurationIT.class})
 @DataJpaTest
 public class CustomerRepositoryAdapterIT {
 
@@ -52,7 +53,7 @@ public class CustomerRepositoryAdapterIT {
         Customer customer = repositoryAdapter.save(anyCustomer.getId(), anyCustomer.getState());
         flushClear();
         // Then
-        JpaCustomerState jpaCustomer = jpaRepository.findById(customer.getId().getId()).orElse(null);
+        JpaCustomerState jpaCustomer = jpaRepository.findById(customer.getId()).orElse(null);
         assertThat(jpaCustomer).isNotNull();
         assertThat(jpaCustomer).isEqualToComparingOnlyGivenFields(customer.getState(),
                 "lastName", "zip", "city", "country");

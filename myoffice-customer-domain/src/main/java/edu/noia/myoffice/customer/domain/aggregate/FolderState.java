@@ -8,42 +8,38 @@ import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Set;
 
-import static edu.noia.myoffice.common.util.exception.ExceptionSuppliers.notFound;
-
 public interface FolderState extends EntityState {
 
     @NotNull
     String getName();
+
+    FolderState setName(String value);
+
     String getNotes();
+
+    FolderState setNotes(String value);
+
     @Valid
     Set<Affiliate> getAffiliates();
 
-    FolderState setName(String value);
-    FolderState setNotes(String value);
-
     default FolderState modify(FolderState modifier) {
-        return setName(modifier.getName()).setNotes(modifier.getNotes());
+        return setName(modifier.getName())
+                .setNotes(modifier.getNotes())
+                .clearAffiliates()
+                .addAffiliates(modifier.getAffiliates());
     }
 
     default FolderState patch(FolderState modifier) {
         return setName(modifier.getName() != null ? modifier.getName() : getName())
-                .setNotes(modifier.getNotes() != null ? modifier.getName() : getNotes());
+                .setNotes(modifier.getNotes() != null ? modifier.getNotes() : getNotes())
+                .addAffiliates(modifier.getAffiliates());
     }
 
-    default FolderState add(Affiliate affiliate) {
-        getAffiliates().add(affiliate);
-        return this;
-    }
+    FolderState addAffiliate(Affiliate affiliate);
 
-    default FolderState add(Collection<Affiliate> affiliates) {
-        getAffiliates().addAll(affiliates);
-        return this;
-    }
+    FolderState addAffiliates(Collection<Affiliate> affiliates);
 
-    default FolderState remove(Affiliate affiliate) {
-        if (!getAffiliates().remove(affiliate)) {
-            throw notFound(Affiliate.class, affiliate.getCustomerId()).get();
-        }
-        return this;
-    }
+    FolderState removeAffiliate(Affiliate affiliate);
+
+    FolderState clearAffiliates();
 }

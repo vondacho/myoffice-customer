@@ -1,12 +1,9 @@
 package edu.noia.myoffice.customer.data.jpa;
 
-import edu.noia.myoffice.common.data.jpa.JpaAuditableEntity;
+import edu.noia.myoffice.common.data.jpa.JpaBaseEntity;
 import edu.noia.myoffice.common.domain.entity.EntityState;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
-import edu.noia.myoffice.customer.domain.vo.EmailAddress;
-import edu.noia.myoffice.customer.domain.vo.PhoneNumber;
-import edu.noia.myoffice.customer.domain.vo.Profile;
-import edu.noia.myoffice.customer.domain.vo.Social;
+import edu.noia.myoffice.customer.domain.vo.*;
 import lombok.*;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
@@ -18,10 +15,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Audited
-@Table(name = "customer_state")
+@Table(name = "customer")
 @ToString
 @Entity
 @EqualsAndHashCode(of = "id", callSuper = false)
@@ -30,9 +26,9 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class JpaCustomerState extends JpaAuditableEntity implements CustomerState {
+public class JpaCustomerState extends JpaBaseEntity implements CustomerState {
 
-    UUID id;
+    CustomerId id;
     String salutation;
     String firstName;
     String lastName;
@@ -116,16 +112,16 @@ public class JpaCustomerState extends JpaAuditableEntity implements CustomerStat
     String notes;
 
     public static JpaCustomerState of(CustomerState state) {
-        return (JpaCustomerState)(new JpaCustomerState().modify(state));
+        return new JpaCustomerState().modify((EntityState)state);
     }
 
     @Override
-    public CustomerState modify(EntityState modifier) {
-        return modifier instanceof JpaCustomerState ? modify((JpaCustomerState)modifier) : this;
+    public JpaCustomerState modify(EntityState modifier) {
+        return modifier instanceof CustomerState ? (JpaCustomerState)modify((CustomerState)modifier) : this;
     }
 
     @Override
-    public CustomerState patch(EntityState modifier) {
-        return modifier instanceof JpaCustomerState ? patch((JpaCustomerState)modifier) : this;
+    public JpaCustomerState patch(EntityState modifier) {
+        return modifier instanceof CustomerState ? (JpaCustomerState)patch((CustomerState)modifier) : this;
     }
 }

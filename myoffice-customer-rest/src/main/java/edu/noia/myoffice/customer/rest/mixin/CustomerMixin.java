@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CustomerMixin {
     @JsonIgnore
-    List<Event> getDomainEvents();
+    List<Event> getRegisteredEvents();
 }

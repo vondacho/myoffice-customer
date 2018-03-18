@@ -8,6 +8,6 @@ dependencies {
     compile("io.springfox:springfox-swagger2:${springfoxVersion}")
     compile("io.springfox:springfox-swagger-ui:${springfoxVersion}")
     compile("org.flywaydb:flyway-core:${flywayVersion}")
-    compile("com.h2database:h2:${h2databaseVersion}")
+    compile("org.hsqldb:hsqldb:${hsqlDatabaseVersion}")
     compile 'mysql:mysql-connector-java'
 }
