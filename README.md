@@ -73,13 +73,3 @@ This module aims to provide ...
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=edu.noia.myoffice%3Amyoffice-customer%3Amyoffice-customer-batch&metric=ncloc)](https://sonarcloud.io/dashboard?id=edu.noia.myoffice%3Amyoffice-customer%3Amyoffice-customer-batch)
 
 This module aims to provide ...
-
-## myoffice-customer-util
-
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=edu.noia.myoffice%3Amyoffice-customer%3Amyoffice-customer-util&metric=alert_status)](https://sonarcloud.io/dashboard?id=edu.noia.myoffice%3Amyoffice-customer%3Amyoffice-customer-util)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=edu.noia.myoffice%3Amyoffice-customer%3Amyoffice-customer-util&metric=code_smells)](https://sonarcloud.io/dashboard?id=edu.noia.myoffice%3Amyoffice-customer%3Amyoffice-customer-util)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=edu.noia.myoffice%3Amyoffice-customer%3Amyoffice-customer-util&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=edu.noia.myoffice%3Amyoffice-customer%3Amyoffice-customer-util)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=edu.noia.myoffice%3Amyoffice-customer%3Amyoffice-customer-util&metric=coverage)](https://sonarcloud.io/dashboard?id=edu.noia.myoffice%3Amyoffice-customer%3Amyoffice-customer-util)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=edu.noia.myoffice%3Amyoffice-customer%3Amyoffice-customer-util&metric=ncloc)](https://sonarcloud.io/dashboard?id=edu.noia.myoffice%3Amyoffice-customer%3Amyoffice-customer-util)
-
-This module aims to provide basic utilities.
