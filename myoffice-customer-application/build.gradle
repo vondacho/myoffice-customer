@@ -10,4 +10,7 @@ dependencies {
     compile("org.flywaydb:flyway-core:${flywayVersion}")
     compile("org.hsqldb:hsqldb:${hsqlDatabaseVersion}")
     compile 'mysql:mysql-connector-java'
+    compile("de.codecentric:spring-boot-admin-starter-client:${springBootAdminVersion}")
 }
+
+bootJar.enabled = true
