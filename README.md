@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/vondacho/myoffice-customer.svg?branch=master)](https://travis-ci.org/vondacho/myoffice-customer)
 
-This project implements the microservice which supports the Customer domain of the myOffice application.
+This project implements the microservice which supports the **Customer** domain of the myOffice application.
 
 ## myoffice-customer-application
 
