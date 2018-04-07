@@ -39,49 +39,49 @@ public class JpaCustomerState extends JpaBaseEntity implements CustomerState {
     String region;
     String country;
 
-    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.converter.PhoneNumberConverter")
+    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.type.PhoneNumberType")
     @Columns(columns = {
             @Column(name="phone_number1"),
             @Column(name="phone_kind1")
     })
     PhoneNumber phoneNumber1;
 
-    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.converter.PhoneNumberConverter")
+    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.type.PhoneNumberType")
     @Columns(columns = {
             @Column(name="phone_number2"),
             @Column(name="phone_kind2")
     })
     PhoneNumber phoneNumber2;
 
-    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.converter.PhoneNumberConverter")
+    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.type.PhoneNumberType")
     @Columns(columns = {
             @Column(name="phone_number3"),
             @Column(name="phone_kind3")
     })
     PhoneNumber phoneNumber3;
 
-    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.converter.PhoneNumberConverter")
+    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.type.PhoneNumberType")
     @Columns(columns = {
             @Column(name="phone_number4"),
             @Column(name="phone_kind4")
     })
     PhoneNumber phoneNumber4;
 
-    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.converter.EmailAddressConverter")
+    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.type.EmailAddressType")
     @Columns(columns = {
             @Column(name="email_address1"),
             @Column(name="email_kind1")
     })
     EmailAddress emailAddress1;
 
-    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.converter.EmailAddressConverter")
+    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.type.EmailAddressType")
     @Columns(columns = {
             @Column(name="email_address2"),
             @Column(name="email_kind2")
     })
     EmailAddress emailAddress2;
 
-    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.converter.EmailAddressConverter")
+    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.type.EmailAddressType")
     @Columns(columns = {
             @Column(name="email_address3"),
             @Column(name="email_kind3")
@@ -90,7 +90,7 @@ public class JpaCustomerState extends JpaBaseEntity implements CustomerState {
 
     String websiteUrl;
 
-    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.converter.SocialConverter")
+    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.type.SocialType")
     @Columns(columns = {
             @Column(name="soc_skypeUrl"),
             @Column(name="soc_facebookUrl"),
@@ -101,7 +101,7 @@ public class JpaCustomerState extends JpaBaseEntity implements CustomerState {
     })
     Social social;
 
-    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.converter.ProfileConverter")
+    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.type.ProfileType")
     @Columns(columns = {
             @Column(name="prof_hasMoved"),
             @Column(name="prof_isSubcontractor"),

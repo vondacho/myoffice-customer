@@ -1,16 +1,17 @@
 dependencies {
-    compile("edu.noia.myoffice:myoffice-customer-domain:${version}")
-    compile("edu.noia.myoffice:myoffice-customer-data:${version}")
-    compile("edu.noia.myoffice:myoffice-customer-messaging:${version}")
-    compile("edu.noia.myoffice:myoffice-customer-rest:${version}")
-    compile("edu.noia.myoffice:myoffice-customer-batch:${version}")
+    compile "edu.noia.myoffice:myoffice-customer-domain:${version}"
+    compile "edu.noia.myoffice:myoffice-customer-data:${version}"
+    compile "edu.noia.myoffice:myoffice-customer-messaging:${version}"
+    compile "edu.noia.myoffice:myoffice-customer-rest:${version}"
+    compile "edu.noia.myoffice:myoffice-customer-batch:${version}"
     compile 'org.springframework.boot:spring-boot-starter-actuator'
-    compile("io.springfox:springfox-swagger2:${springfoxVersion}")
-    compile("io.springfox:springfox-swagger-ui:${springfoxVersion}")
-    compile("org.flywaydb:flyway-core:${flywayVersion}")
-    compile("org.hsqldb:hsqldb:${hsqlDatabaseVersion}")
+    compile "io.springfox:springfox-swagger2:${springfoxVersion}"
+    compile "io.springfox:springfox-swagger-ui:${springfoxVersion}"
+    compile "org.flywaydb:flyway-core:${flywayVersion}"
+    compile "org.hsqldb:hsqldb:${hsqlDatabaseVersion}"
     compile 'mysql:mysql-connector-java'
-    compile("de.codecentric:spring-boot-admin-starter-client:${springBootAdminVersion}")
+    compile "de.codecentric:spring-boot-admin-starter-client:${springBootAdminVersion}"
+    compile "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
 }
 
 bootJar.enabled = true

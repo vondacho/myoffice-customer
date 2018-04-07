@@ -45,7 +45,7 @@ public class FolderRepositoryAdapterIT {
         // Then
         JpaFolderState jpaFolder = jpaRepository.findById(folder.getId()).orElse(null);
         assertThat(jpaFolder).isNotNull();
-        assertThat(jpaFolder).isEqualToComparingOnlyGivenFields(folder.getState(),"name", "notes");
+        assertThat(jpaFolder).isEqualToComparingOnlyGivenFields(folder.getState(), "name", "notes");
     }
 
     @Test
@@ -60,11 +60,10 @@ public class FolderRepositoryAdapterIT {
         // Then
         JpaFolderState jpaFolder = jpaRepository.findById(folder.getId()).orElse(null);
         assertThat(jpaFolder).isNotNull();
-        assertThat(jpaFolder).isEqualToComparingOnlyGivenFields(folder.getState(),"name", "notes");
+        assertThat(jpaFolder).isEqualToComparingOnlyGivenFields(folder.getState(), "name", "notes");
         assertThat(jpaFolder.getAffiliates()).containsExactlyInAnyOrder(affiliate1, affiliate2);
     }
 
-    //@Ignore
     @Test
     public void findAll_by_customer_should_return_the_right_folders() {
         // Given

@@ -34,7 +34,7 @@ public class JpaFolderState extends JpaBaseEntity implements FolderState {
     String name;
     String notes;
 
-    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.converter.AffiliateConverter")
+    @Type(type = "edu.noia.myoffice.customer.data.jpa.hibernate.type.AffiliateType")
     @Columns(columns = {
             @Column(name="customerId"),
             @Column(name="primaryDebtor")

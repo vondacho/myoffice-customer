@@ -1,20 +1,19 @@
-package edu.noia.myoffice.customer.data.jpa.hibernate.converter;
+package edu.noia.myoffice.customer.data.jpa.hibernate.type;
 
+import edu.noia.myoffice.common.data.jpa.hibernate.type.AbstractUserType;
 import edu.noia.myoffice.customer.domain.vo.Profile;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.type.BooleanType;
-import org.hibernate.usertype.UserType;
 
-import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class ProfileConverter implements UserType {
+public class ProfileType extends AbstractUserType {
 
     @Override
     public int[] sqlTypes() {
-        return new int[] {
+        return new int[]{
                 BooleanType.INSTANCE.sqlType(),
                 BooleanType.INSTANCE.sqlType(),
                 BooleanType.INSTANCE.sqlType()
@@ -24,16 +23,6 @@ public class ProfileConverter implements UserType {
     @Override
     public Class returnedClass() {
         return Profile.class;
-    }
-
-    @Override
-    public boolean equals(Object x, Object y) {
-        return x != null && x.equals(y);
-    }
-
-    @Override
-    public int hashCode(Object x) {
-        return x.hashCode();
     }
 
     @Override
@@ -52,36 +41,10 @@ public class ProfileConverter implements UserType {
             st.setBoolean(index++, profile.getHasMoved());
             st.setBoolean(index++, profile.getIsSubcontractor());
             st.setBoolean(index, profile.getSendInvitation());
-        }
-        else {
+        } else {
             st.setNull(index++, BooleanType.INSTANCE.sqlType());
             st.setNull(index++, BooleanType.INSTANCE.sqlType());
             st.setNull(index, BooleanType.INSTANCE.sqlType());
         }
-    }
-
-    @Override
-    public Object deepCopy(Object value) {
-        return value;
-    }
-
-    @Override
-    public boolean isMutable() {
-        return false;
-    }
-
-    @Override
-    public Serializable disassemble(Object value) {
-        return (Serializable)value;
-    }
-
-    @Override
-    public Object assemble(Serializable cached, Object owner) {
-        return cached;
-    }
-
-    @Override
-    public Object replace(Object original, Object target, Object owner) {
-        return original;
     }
 }
