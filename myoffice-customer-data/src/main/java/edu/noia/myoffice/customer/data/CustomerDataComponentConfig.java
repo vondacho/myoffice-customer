@@ -2,11 +2,14 @@ package edu.noia.myoffice.customer.data;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.noia.myoffice.common.data.adapter.RdbmsEventStoreAdapter;
+import edu.noia.myoffice.common.data.jpa.JpaEventPublication;
 import edu.noia.myoffice.common.data.jpa.JpaEventPublicationRepository;
 import edu.noia.myoffice.common.event.store.InternalEventStore;
 import edu.noia.myoffice.customer.data.adapter.CustomerRepositoryAdapter;
 import edu.noia.myoffice.customer.data.adapter.FolderRepositoryAdapter;
+import edu.noia.myoffice.customer.data.jpa.JpaCustomerState;
 import edu.noia.myoffice.customer.data.jpa.JpaCustomerStateRepository;
+import edu.noia.myoffice.customer.data.jpa.JpaFolderState;
 import edu.noia.myoffice.customer.data.jpa.JpaFolderStateRepository;
 import edu.noia.myoffice.customer.domain.repository.CustomerRepository;
 import edu.noia.myoffice.customer.domain.repository.FolderRepository;
@@ -17,15 +20,19 @@ import org.springframework.data.envers.repository.support.EnversRevisionReposito
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @EnableJpaRepositories(
-        basePackages = {
-                "edu.noia.myoffice.customer.data.jpa",
-                "edu.noia.myoffice.common.data.jpa" },
+        basePackageClasses = {
+                JpaCustomerStateRepository.class,
+                JpaFolderStateRepository.class,
+                JpaEventPublicationRepository.class
+        },
         repositoryFactoryBeanClass = EnversRevisionRepositoryFactoryBean.class
 )
 @EntityScan(
-        basePackages = {
-                "edu.noia.myoffice.customer.data.jpa",
-                "edu.noia.myoffice.common.data.jpa" }
+        basePackageClasses = {
+                JpaCustomerState.class,
+                JpaFolderState.class,
+                JpaEventPublication.class
+        }
 )
 @Configuration
 public class CustomerDataComponentConfig {
