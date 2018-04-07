@@ -1,6 +1,7 @@
 package edu.noia.myoffice.customer.rest;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import edu.noia.myoffice.common.rest.exception.EndpointExceptionHandler;
 import edu.noia.myoffice.common.serializer.CommonSerializers;
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
@@ -13,7 +14,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
-@ComponentScan
+@ComponentScan(basePackageClasses = {
+        CustomerRestComponentConfig.class,
+        EndpointExceptionHandler.class
+})
 @Configuration
 public class CustomerRestComponentConfig {
 
