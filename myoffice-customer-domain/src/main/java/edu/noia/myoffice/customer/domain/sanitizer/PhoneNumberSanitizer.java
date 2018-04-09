@@ -1,4 +1,4 @@
-package edu.noia.myoffice.customer.domain.service;
+package edu.noia.myoffice.customer.domain.sanitizer;
 
 import edu.noia.myoffice.customer.domain.vo.PhoneNumber;
 

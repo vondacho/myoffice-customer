@@ -1,10 +1,9 @@
-**/out/
-**/*.iml
 .idea/
 .gradle/
+**/out/
 **/build/
+**/*.iml
 **/node_modules/
 /myoffice-customer-ui/src/main/resources/static/
 /myoffice-customer-ui/src/ui/coverage/
 **/sample-customer-data.sql
-

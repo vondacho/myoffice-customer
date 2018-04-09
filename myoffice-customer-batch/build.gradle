@@ -1,5 +1,7 @@
 dependencies {
     compile("edu.noia.myoffice:myoffice-customer-domain:${version}")
     compile("edu.noia.myoffice:myoffice-common-util:${myofficeCommonVersion}")
+    compile 'org.springframework.boot:spring-boot-starter'
     compile 'org.springframework.data:spring-data-commons'
+    compile 'org.springframework:spring-tx'
 }

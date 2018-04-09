@@ -3,6 +3,7 @@ package edu.noia.myoffice.customer.domain.test.config;
 import edu.noia.myoffice.customer.domain.repository.CustomerRepository;
 import edu.noia.myoffice.customer.domain.repository.FolderRepository;
 import edu.noia.myoffice.customer.domain.service.CustomerService;
+import edu.noia.myoffice.customer.domain.service.DefaultCustomerService;
 import edu.noia.myoffice.customer.domain.test.util.CustomerRepositoryAdapterStub;
 import edu.noia.myoffice.customer.domain.test.util.FolderRepositoryAdapterStub;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,6 @@ public class ITConfiguration {
     @Bean
     public CustomerService customerService(CustomerRepository customerRepository,
                                            FolderRepository folderRepository) {
-        return new CustomerService(customerRepository, folderRepository, event -> {});
+        return new DefaultCustomerService(customerRepository, folderRepository, event -> {});
     }
 }

@@ -1,9 +1,8 @@
 dependencies {
     compile("edu.noia.myoffice:myoffice-common-domain:${myofficeCommonVersion}")
     compile("edu.noia.myoffice:myoffice-common-util:${myofficeCommonVersion}")
-    compile 'org.springframework.boot:spring-boot-starter'
-    compile 'org.springframework.boot:spring-boot-starter-validation'
-    compile 'org.springframework:spring-tx'
     compile("com.googlecode.libphonenumber:libphonenumber:${googlePhoneVersion}")
     testCompile 'nl.jqno.equalsverifier:equalsverifier:2.4'
+    testCompile 'org.springframework.boot:spring-boot-starter'
+    testCompile 'org.springframework.boot:spring-boot-starter-validation'
 }

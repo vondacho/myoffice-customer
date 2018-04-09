@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
 @ComponentScan(basePackageClasses = {
-        CustomerRestComponentConfig.class,
         EndpointExceptionHandler.class
 })
 @Configuration
