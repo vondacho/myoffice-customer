@@ -1,10 +1,9 @@
-package edu.noia.myoffice.customer.rest.service;
+package edu.noia.myoffice.customer.domain.service;
 
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.CustomerState;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
 import edu.noia.myoffice.customer.domain.aggregate.FolderState;
-import edu.noia.myoffice.customer.domain.service.CustomerService;
 import edu.noia.myoffice.customer.domain.vo.Affiliate;
 import edu.noia.myoffice.customer.domain.vo.Affiliation;
 import edu.noia.myoffice.customer.domain.vo.CustomerId;

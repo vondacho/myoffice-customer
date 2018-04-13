@@ -14,18 +14,21 @@ import edu.noia.myoffice.customer.domain.vo.Affiliate;
 import edu.noia.myoffice.customer.domain.vo.Affiliation;
 import edu.noia.myoffice.customer.domain.vo.CustomerId;
 import edu.noia.myoffice.customer.domain.vo.FolderId;
+import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class DefaultCustomerService implements CustomerService {
 
     @NonNull
-    private CustomerRepository customerRepository;
+    CustomerRepository customerRepository;
     @NonNull
-    private FolderRepository folderRepository;
+    FolderRepository folderRepository;
     @NonNull
-    private EventPublisher eventPublisher;
+    EventPublisher eventPublisher;
 
     public Folder create(FolderState data) {
         return Folder.of(data).save(folderRepository, eventPublisher);

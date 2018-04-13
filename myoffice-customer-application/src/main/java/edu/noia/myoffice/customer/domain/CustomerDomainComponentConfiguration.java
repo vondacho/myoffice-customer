@@ -1,19 +1,14 @@
-package edu.noia.myoffice.customer.rest;
+package edu.noia.myoffice.customer.domain;
 
 import edu.noia.myoffice.common.domain.event.EventPublisher;
 import edu.noia.myoffice.customer.domain.repository.CustomerRepository;
 import edu.noia.myoffice.customer.domain.repository.FolderRepository;
-import edu.noia.myoffice.customer.domain.service.CustomerDataService;
-import edu.noia.myoffice.customer.domain.service.CustomerService;
-import edu.noia.myoffice.customer.domain.service.DefaultCustomerDataService;
-import edu.noia.myoffice.customer.domain.service.DefaultCustomerService;
-import edu.noia.myoffice.customer.rest.service.TransactionalCustomerDataService;
-import edu.noia.myoffice.customer.rest.service.TransactionalCustomerService;
+import edu.noia.myoffice.customer.domain.service.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class CustomerDomainComponentConfig {
+public class CustomerDomainComponentConfiguration {
 
     @Bean
     public CustomerService customerService(CustomerRepository customerRepository,

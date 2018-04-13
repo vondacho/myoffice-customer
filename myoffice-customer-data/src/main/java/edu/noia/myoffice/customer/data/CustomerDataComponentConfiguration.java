@@ -35,7 +35,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         }
 )
 @Configuration
-public class CustomerDataComponentConfig {
+public class CustomerDataComponentConfiguration {
 
     @Bean
     public FolderRepository folderRepository(JpaFolderStateRepository jpaFolderRepository) {

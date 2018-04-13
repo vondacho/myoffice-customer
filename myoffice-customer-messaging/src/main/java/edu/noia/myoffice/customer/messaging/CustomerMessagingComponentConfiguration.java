@@ -13,7 +13,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @ComponentScan
 @Configuration
-public class CustomerMessagingComponentConfig {
+public class CustomerMessagingComponentConfiguration {
 
     @Bean
     public ExternalEventStore externalEventStore() {

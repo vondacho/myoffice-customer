@@ -18,7 +18,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
         EndpointExceptionHandler.class
 })
 @Configuration
-public class CustomerRestComponentConfig {
+public class CustomerRestComponentConfiguration {
 
     @Bean
     public Jackson2ObjectMapperBuilder jacksonBuilder() {

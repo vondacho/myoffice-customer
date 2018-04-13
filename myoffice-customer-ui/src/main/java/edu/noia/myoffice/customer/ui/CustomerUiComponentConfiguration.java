@@ -6,5 +6,5 @@ import org.springframework.context.annotation.Import;
 
 @Import(ClientSidePathLocationStrategySupportConfiguration.class)
 @Configuration
-public class CustomerUIComponentConfig {
+public class CustomerUiComponentConfiguration {
 }

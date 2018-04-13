@@ -1,8 +1,7 @@
-package edu.noia.myoffice.customer.rest.service;
+package edu.noia.myoffice.customer.domain.service;
 
 import edu.noia.myoffice.customer.domain.aggregate.Customer;
 import edu.noia.myoffice.customer.domain.aggregate.Folder;
-import edu.noia.myoffice.customer.domain.service.CustomerDataService;
 import edu.noia.myoffice.customer.domain.vo.CustomerId;
 import edu.noia.myoffice.customer.domain.vo.FolderId;
 import lombok.NonNull;

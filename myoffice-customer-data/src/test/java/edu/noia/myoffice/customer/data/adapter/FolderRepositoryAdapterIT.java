@@ -1,6 +1,6 @@
 package edu.noia.myoffice.customer.data.adapter;
 
-import edu.noia.myoffice.customer.data.CustomerDataComponentConfig;
+import edu.noia.myoffice.customer.data.CustomerDataComponentConfiguration;
 import edu.noia.myoffice.customer.data.jpa.JpaFolderState;
 import edu.noia.myoffice.customer.data.jpa.JpaFolderStateRepository;
 import edu.noia.myoffice.customer.data.test.config.ConfigurationIT;
@@ -24,7 +24,7 @@ import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes = {CustomerDataComponentConfig.class, ConfigurationIT.class})
+@ContextConfiguration(classes = {CustomerDataComponentConfiguration.class, ConfigurationIT.class})
 @DataJpaTest
 public class FolderRepositoryAdapterIT {
 
