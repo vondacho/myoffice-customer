@@ -1,4 +1,4 @@
-CREATE TABLE myo_event_publication (
+CREATE TABLE t_event_publication (
   pk_id           BIGINT(10)   NOT NULL AUTO_INCREMENT,
   event_name      VARCHAR(128) NOT NULL,
   event_timestamp TIMESTAMP    NOT NULL,

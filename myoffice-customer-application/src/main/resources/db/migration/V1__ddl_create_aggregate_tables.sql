@@ -1,4 +1,4 @@
-CREATE TABLE myo_folder (
+CREATE TABLE t_folder (
   pk_id BIGINT(10)  NOT NULL AUTO_INCREMENT,
   id    VARCHAR(40) NOT NULL,
   name  VARCHAR(10) NOT NULL,
@@ -7,16 +7,16 @@ CREATE TABLE myo_folder (
   UNIQUE INDEX id_u (id)
 );
 
-CREATE TABLE myo_folder_affiliate (
+CREATE TABLE t_folder_affiliate (
   fk_folder      BIGINT(10)  NOT NULL,
   customer_id    VARCHAR(40) NOT NULL,
   primary_debtor BOOLEAN     NULL,
   INDEX fk_folder_i (fk_folder),
   FOREIGN KEY (fk_folder)
-  REFERENCES myo_folder (pk_id)
+  REFERENCES t_folder (pk_id)
 );
 
-CREATE TABLE myo_customer (
+CREATE TABLE t_customer (
   pk_id                 BIGINT(10)  NOT NULL AUTO_INCREMENT,
   id                    VARCHAR(40) NOT NULL,
   salutation            VARCHAR(20) NULL,

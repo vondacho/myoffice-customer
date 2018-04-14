@@ -1,4 +1,4 @@
-CREATE TABLE myo_folder_aud (
+CREATE TABLE t_folder_aud (
   pk_id   BIGINT(10)   NOT NULL,
   id      VARCHAR(40)  NOT NULL,
   name    VARCHAR(10)  NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE myo_folder_aud (
   PRIMARY KEY (pk_id, rev)
 );
 
-CREATE TABLE myo_folder_affiliate_aud (
+CREATE TABLE t_folder_affiliate_aud (
   fk_folder      BIGINT(10)  NOT NULL,
   customer_id    VARCHAR(40) NOT NULL,
   primary_debtor BOOLEAN     NULL,
@@ -17,7 +17,7 @@ CREATE TABLE myo_folder_affiliate_aud (
   PRIMARY KEY (fk_folder, customer_id, rev)
 );
 
-CREATE TABLE myo_customer_aud (
+CREATE TABLE t_customer_aud (
   pk_id                 BIGINT(10)  NOT NULL,
   id                    VARCHAR(40) NOT NULL,
   salutation            VARCHAR(20) NULL,
