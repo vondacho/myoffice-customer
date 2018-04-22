@@ -62,8 +62,8 @@ public class Customer extends BaseEntity<Customer, CustomerId, CustomerState> {
     }
 
     @Override
-    public void validate(CustomerState state) {
-        validateState(state);
+    public CustomerState validate(CustomerState state) {
+        return validateState(state);
     }
 
     @Override

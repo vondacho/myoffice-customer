@@ -57,8 +57,8 @@ public class Folder extends BaseEntity<Folder, FolderId, FolderState> {
     }
 
     @Override
-    public void validate(FolderState state) {
-        validateState(state);
+    public FolderState validate(FolderState state) {
+        return validateState(state);
     }
 
     public Folder affiliate(Affiliate affiliate) {
